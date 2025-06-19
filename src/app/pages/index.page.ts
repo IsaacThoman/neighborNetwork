@@ -2,11 +2,11 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { HeaderComponent } from '../components/header.component.ts';
-import { FilterCriteria, FiltersComponent } from '../components/filters.component.ts';
-import { Profile, ProfileCardComponent } from '../components/profile-card.component.ts';
-import { ActionButtonsComponent } from '../components/action-buttons.component.ts';
-import { EmptyStateComponent } from '../components/empty-state.component.ts';
+import { HeaderComponent } from '../components/header/header.component.ts';
+import { FilterCriteria, FiltersComponent } from '../components/filters/filters.component.ts';
+import { Profile, ProfileCardComponent } from '../components/profile-card/profile-card.component.ts';
+import { ActionButtonsComponent } from '../components/action-buttons/action-buttons.component.ts';
+import { EmptyStateComponent } from '../components/empty-state/empty-state.component.ts';
 
 @Component({
 	selector: 'app-home',
