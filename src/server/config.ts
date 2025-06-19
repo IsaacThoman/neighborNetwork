@@ -63,9 +63,7 @@ function parseConfig(env: Record<string, string>) {
 		server: {
 			port: parseInt(env.PORT),
 			hostname: env.SERVER_HOSTNAME,
-
 		},
-
 	};
 }
 

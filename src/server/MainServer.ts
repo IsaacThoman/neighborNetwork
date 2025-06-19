@@ -2,17 +2,13 @@ import { Application, Router, send } from '@oak/oak';
 import { Server } from 'https://deno.land/x/socket_io@0.2.0/mod.ts';
 import { serve } from 'https://deno.land/std@0.150.0/http/server.ts';
 
-
 import { CustomServer } from '../shared/messages.ts';
-import config from "./config.ts";
-
-
+import config from './config.ts';
 
 export class MainServer {
 	router: Router = new Router();
 	app: Application = new Application();
 	io: CustomServer = new Server();
-
 
 	constructor() {
 		this.setupRoutes();
