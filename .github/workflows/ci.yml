@@ -1,0 +1,169 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read # For checkout - test
+  issues: write # To be able to comment on released issues
+  pull-requests: write # To be able to comment on released pull requests
+  id-token: write # To enable use of OIDC for npm provenance
+
+jobs:
+  # Build Job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: 'latest'
+      - name: Build project
+        run: deno task build
+      - name: List build directory contents
+        run: ls -la ./dist
+
+  # Lint Job
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: 'latest'
+      - name: Build project
+        run: deno task build
+      - name: Run lint
+        run: deno lint
+  # Check Job
+  types:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: 'latest'
+      - name: install
+        run: deno install
+      - name: check src
+        run: deno check ./src/client ./src/server
+  # Format Job
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: 'latest'
+      - name: install
+        run: deno install
+      - name: fmt check src
+        run: deno fmt --check src
+
+  # Healthcheck Job
+  health:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: 'latest'
+      - name: Start server
+        run: deno task start &
+      - name: Health check
+        run: |
+          retries=38
+          count=0
+          until curl -f http://localhost:3000; do
+            count=$((count + 1))
+            if [ $count -lt $retries ]; then
+              echo "Health check failed, retrying in 2 seconds... ($count/$retries)"
+              sleep 2
+            else
+              echo "Health check failed after $retries attempts, exiting."
+              exit 1
+            fi
+          done
+  # Add this job after the build job
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Build Docker image
+        run: docker build -t candiru .
+
+      - name: Run Docker container
+        run: docker run --memory=400mb -d -p 3000:3000 candiru
+
+      - name: Health check
+        run: |
+          retries=38
+          count=0
+          until curl -f http://localhost:3000; do
+            count=$((count + 1))
+            if [ $count -lt $retries ]; then
+              echo "Health check failed, retrying in 2 seconds... ($count/$retries)"
+              sleep 2
+            else
+              echo "Health check failed after $retries attempts, exiting."
+              exit 1
+            fi
+          done
+
+  #  # Audit Job
+  #  audit:
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - name: Checkout repository
+  #        uses: actions/checkout@v3
+  #      - name: Set up Deno
+  #        uses: denoland/setup-deno@v1
+  #        with:
+  #          deno-version: "latest"
+  #      - name: Run security audit
+  #        run: npm audit --audit-level=high
+
+  # Release Job (Only for main and dev branches)
+  release:
+    if: startsWith(github.ref, 'refs/heads/main') || startsWith(github.ref, 'refs/heads/dev')
+    name: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: 'false'
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_DEPLOY_TOKEN }}
+          GIT_AUTHOR_NAME: 'github-actions[bot]'
+          GIT_AUTHOR_EMAIL: 'github-actions[bot]@users.noreply.github.com'
+          GIT_COMMITTER_NAME: 'github-actions[bot]'
+          GIT_COMMITTER_EMAIL: 'github-actions[bot]@users.noreply.github.com'
+        run: npx semantic-release --extends ./release.config.js
