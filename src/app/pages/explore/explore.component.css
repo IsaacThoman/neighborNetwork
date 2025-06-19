@@ -1,0 +1,15 @@
+/* Explore page specific styles */
+.explore-container {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Card animations and effects are inherited from the shared components */

@@ -1,0 +1,28 @@
+/* Additional custom styles can be added here */
+.profile-card {
+  transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-2px);
+}
+
+.badge-enter {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.quick-action:hover {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
