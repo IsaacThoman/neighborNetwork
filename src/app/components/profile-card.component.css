@@ -1,0 +1,21 @@
+@keyframes slideRight {
+	to {
+		transform: translateX(100%) rotate(10deg);
+		opacity: 0;
+	}
+}
+
+@keyframes slideLeft {
+	to {
+		transform: translateX(-100%) rotate(-10deg);
+		opacity: 0;
+	}
+}
+
+.animate-slide-right {
+	animation: slideRight 0.3s ease-out forwards;
+}
+
+.animate-slide-left {
+	animation: slideLeft 0.3s ease-out forwards;
+}

@@ -26,6 +26,89 @@ export class MainServer {
 			}
 		});
 
+		// Professional networking profiles endpoint
+		this.router.get('/api/profiles', (context) => {
+			try {
+				context.response.type = 'application/json';
+				context.response.body = JSON.stringify([
+					{
+						id: 1,
+						name: 'Sarah Johnson',
+						pronouns: 'she/her',
+						department: 'Technology',
+						role: 'Senior Software Engineer',
+						yearsAtCompany: 4,
+						location: 'Bloomington, IL',
+						workStyle: 'Hybrid',
+						bio:
+							'Passionate about innovative solutions and mentoring junior developers. Always looking to collaborate on exciting projects and share knowledge about cloud architecture.',
+						profileImage: '/redguy.webp',
+						interests: ['Cloud Architecture', 'Mentorship', 'Innovation Labs'],
+					},
+					{
+						id: 2,
+						name: 'Marcus Chen',
+						pronouns: 'he/him',
+						department: 'Claims',
+						role: 'Claims Operations Manager',
+						yearsAtCompany: 7,
+						location: 'Phoenix, AZ',
+						workStyle: 'In Person',
+						bio:
+							'Leading digital transformation in claims processing. Interested in connecting with colleagues working on automation and process improvement initiatives.',
+						profileImage: '/yellowguy.webp',
+						interests: ['Process Automation', 'Digital Transformation', 'Team Leadership'],
+					},
+					{
+						id: 3,
+						name: 'Alex Rivera',
+						pronouns: 'they/them',
+						department: 'Marketing',
+						role: 'Digital Marketing Specialist',
+						yearsAtCompany: 2,
+						location: 'Atlanta, GA',
+						workStyle: 'Remote',
+						bio:
+							'Creative strategist focused on data-driven marketing campaigns. Looking to network with analytics professionals and cross-functional team members.',
+						profileImage: '/redguy.webp',
+						interests: ['Data Analytics', 'Creative Strategy', 'Cross-functional Collaboration'],
+					},
+					{
+						id: 4,
+						name: 'Jennifer Park',
+						pronouns: 'she/her',
+						department: 'Finance',
+						role: 'Financial Analyst III',
+						yearsAtCompany: 5,
+						location: 'Dallas, TX',
+						workStyle: 'Hybrid',
+						bio:
+							'Specializing in predictive modeling and risk assessment. Eager to connect with colleagues in data science and actuarial roles for knowledge sharing.',
+						profileImage: '/yellowguy.webp',
+						interests: ['Predictive Modeling', 'Risk Assessment', 'Data Science'],
+					},
+					{
+						id: 5,
+						name: 'David Kim',
+						pronouns: 'he/him',
+						department: 'Human Resources',
+						role: 'Talent Acquisition Lead',
+						yearsAtCompany: 6,
+						location: 'Tempe, AZ',
+						workStyle: 'In Person',
+						bio:
+							'Building diverse and inclusive teams across StateFarm. Always interested in connecting with hiring managers and department leads to understand evolving talent needs.',
+						profileImage: '/redguy.webp',
+						interests: ['Talent Acquisition', 'Diversity & Inclusion', 'Organizational Development'],
+					},
+				]);
+			} catch (err) {
+				console.error('Error getting profiles via API:', err);
+				context.response.status = 500;
+				context.response.body = JSON.stringify({ error: 'Internal server error' });
+			}
+		});
+
 		this.router.get('/(.*)', async (context) => {
 			try {
 				await send(context, context.params[0], {

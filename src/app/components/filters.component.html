@@ -1,0 +1,73 @@
+<div class="max-w-4xl mx-auto px-4" *ngIf="showFilters">
+	<div class="bg-white rounded-lg shadow-sm border border-red-200 p-4 mb-4">
+		<h3 class="text-sm font-semibold text-gray-800 mb-3">Filter by:</h3>
+		<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+			<!-- Department Filter -->
+			<div>
+				<label class="block text-xs font-medium text-gray-700 mb-1">Department</label>
+				<select
+					[(ngModel)]="filters.department"
+					(change)="onFiltersChange()"
+					class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-red-500 focus:border-red-500"
+				>
+					<option value="">All Departments</option>
+					<option value="Technology">Technology</option>
+					<option value="Claims">Claims</option>
+					<option value="Marketing">Marketing</option>
+					<option value="Finance">Finance</option>
+					<option value="Human Resources">Human Resources</option>
+				</select>
+			</div>
+			<!-- Years of Experience Filter -->
+			<div>
+				<label class="block text-xs font-medium text-gray-700 mb-1">Years at Company</label>
+				<select
+					[(ngModel)]="filters.yearsRange"
+					(change)="onFiltersChange()"
+					class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-red-500 focus:border-red-500"
+				>
+					<option value="">Any Experience</option>
+					<option value="1-3">1-3 years</option>
+					<option value="4-6">4-6 years</option>
+					<option value="7+">7+ years</option>
+				</select>
+			</div>
+			<!-- Location Filter -->
+			<div>
+				<label class="block text-xs font-medium text-gray-700 mb-1">Location</label>
+				<select
+					[(ngModel)]="filters.location"
+					(change)="onFiltersChange()"
+					class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-red-500 focus:border-red-500"
+				>
+					<option value="">All Locations</option>
+					<option value="Bloomington, IL">Bloomington, IL</option>
+					<option value="Phoenix, AZ">Phoenix, AZ</option>
+					<option value="Atlanta, GA">Atlanta, GA</option>
+					<option value="Dallas, TX">Dallas, TX</option>
+					<option value="Tempe, AZ">Tempe, AZ</option>
+				</select>
+			</div>
+			<!-- Work Style Filter -->
+			<div>
+				<label class="block text-xs font-medium text-gray-700 mb-1">Work Style</label>
+				<select
+					[(ngModel)]="filters.workStyle"
+					(change)="onFiltersChange()"
+					class="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-red-500 focus:border-red-500"
+				>
+					<option value="">All Styles</option>
+					<option value="In Person">In Person</option>
+					<option value="Remote">Remote</option>
+					<option value="Hybrid">Hybrid</option>
+				</select>
+			</div>
+		</div>
+		<div class="mt-3 flex justify-between items-center">
+			<button (click)="onClearFilters()" class="text-sm text-red-600 hover:text-red-800 font-medium">
+				Clear all filters
+			</button>
+			<span class="text-xs text-gray-500">{{ profileCount }} profiles match your criteria</span>
+		</div>
+	</div>
+</div>
