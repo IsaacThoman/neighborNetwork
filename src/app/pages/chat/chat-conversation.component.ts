@@ -4,24 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService } from '../../services/auth.service.ts';
+import { ChatService, Message, ChatUser } from '../../services/chat.service.ts';
 import { User } from '../../types/user.types.ts';
-
-interface Message {
-	id: string;
-	senderId: string;
-	senderName: string;
-	content: string;
-	timestamp: Date;
-	isRead: boolean;
-}
-
-interface ChatUser {
-	id: string;
-	name: string;
-	avatar: string;
-	isOnline: boolean;
-	isTyping: boolean;
-}
 
 @Component({
 	selector: 'app-chat-conversation',
@@ -45,9 +29,9 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 	constructor(
 		private router: Router,
 		private location: Location,
-		private authService: AuthService
+		private authService: AuthService,
+		private chatService: ChatService
 	) {}
-
 	ngOnInit() {
 		this.currentUser = this.authService.getCurrentUser();
 		this.loadChatData();
@@ -65,93 +49,13 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 	}
 
 	loadChatData() {
-		// Mock data based on chatId - in real app, fetch from API
-		const mockChats = [
-			{
-				id: '1',
-				name: 'Sarah Johnson',
-				avatar: '/redguy.png',
-				isOnline: true,
-				isTyping: false
-			},
-			{
-				id: '2',
-				name: 'Mike Chen',
-				avatar: '/yellowguy.webp',
-				isOnline: false,
-				isTyping: false
-			},
-			{
-				id: '3',
-				name: 'Emily Rodriguez',
-				avatar: '/redguy.png',
-				isOnline: true,
-				isTyping: true
-			},
-			{
-				id: '4',
-				name: 'David Kim',
-				avatar: '/yellowguy.webp',
-				isOnline: true,
-				isTyping: false
-			},
-			{
-				id: '5',
-				name: 'Lisa Thompson',
-				avatar: '/redguy.png',
-				isOnline: false,
-				isTyping: false
-			}
-		];
-
-		this.chatUser = mockChats.find(chat => chat.id === this.chatId) || mockChats[0];
+		this.chatUser = this.chatService.getChatUser(this.chatId);
 	}
 
 	loadMessages() {
-		// Mock messages - in real app, fetch from API
-		const mockMessages: { [key: string]: Message[] } = {
-			'1': [
-				{
-					id: 'm1',
-					senderId: '1',
-					senderName: 'Sarah Johnson',
-					content: 'Hey! Are you free for a quick call about the new design system?',
-					timestamp: new Date(Date.now() - 120000), // 2 minutes ago
-					isRead: false
-				},
-				{
-					id: 'm2',
-					senderId: '1',
-					senderName: 'Sarah Johnson',
-					content: 'I have some ideas that might help streamline our workflow',
-					timestamp: new Date(Date.now() - 60000), // 1 minute ago
-					isRead: false
-				}
-			],
-			'2': [
-				{
-					id: 'm3',
-					senderId: this.currentUser?.alias || 'current',
-					senderName: this.currentUser?.name || 'You',
-					content: 'Thanks for the feedback on the product roadmap!',
-					timestamp: new Date(Date.now() - 3600000), // 1 hour ago
-					isRead: true
-				},
-				{
-					id: 'm4',
-					senderId: '2',
-					senderName: 'Mike Chen',
-					content: 'No problem! Looking forward to the next iteration',
-					timestamp: new Date(Date.now() - 3000000), // 50 minutes ago
-					isRead: true
-				}
-			]
-		};
-
-		this.messages = mockMessages[this.chatId] || [];
+		this.messages = this.chatService.getMessages(this.chatId);
 		this.markMessagesAsRead();
 	}
-
 	sendMessage() {
 		if (!this.newMessage.trim() || !this.currentUser) return;
 
@@ -164,18 +68,19 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 			isRead: false
 		};
 
-		this.messages.push(message);
+		// Add message through chat service
+		this.chatService.addMessage(this.chatId, message);
+		
+		// Reload messages to get updated list
+		this.messages = this.chatService.getMessages(this.chatId);
+		
 		this.newMessage = '';
-
-		// In real app, send to backend via WebSocket or HTTP
-		// this.sendMessageToServer(message);
 
 		// Simulate response after a delay
 		setTimeout(() => {
 			this.simulateResponse();
 		}, 1000 + Math.random() * 2000);
 	}
-
 	simulateResponse() {
 		if (!this.chatUser) return;
 
@@ -201,7 +106,11 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 			isRead: false
 		};
 
-		this.messages.push(response);
+		// Add response through chat service
+		this.chatService.addMessage(this.chatId, response);
+		
+		// Reload messages to get updated list
+		this.messages = this.chatService.getMessages(this.chatId);
 	}
 
 	onTyping() {
@@ -214,13 +123,12 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 			this.isTyping = false;
 		}, 1000);
 	}
-
 	markMessagesAsRead() {
-		this.messages.forEach(message => {
-			if (message.senderId !== this.currentUser?.alias) {
-				message.isRead = true;
-			}
-		});
+		if (this.currentUser?.alias) {
+			this.chatService.markMessagesAsRead(this.chatId, this.currentUser.alias);
+			// Reload messages to get updated read status
+			this.messages = this.chatService.getMessages(this.chatId);
+		}
 	}
 
 	goBack() {
