@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from '../../components/header/header.component.ts';
+import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
 
 interface Connection {
 	id: number;
@@ -8,21 +10,30 @@ interface Connection {
 	role: string;
 	department: string;
 	avatar: string;
-	status: 'online' | 'offline' | 'away';
-	lastSeen?: string;
 	mutualConnections: number;
+	location?: string;
+	yearsExperience?: number;
+	workStyle?: string;
 }
 
 @Component({
 	selector: 'app-connections',
 	standalone: true,
-	imports: [CommonModule, FormsModule],
+	imports: [CommonModule, FormsModule, HeaderComponent, FiltersComponent],
 	templateUrl: './connections.component.html',
 	styleUrls: ['./connections.component.css']
 })
 export class ConnectionsComponent {
 	searchTerm = '';
-	selectedFilter = 'all';
+	showFilters = false;
+
+	// Filter properties
+	filters: FilterCriteria = {
+		department: '',
+		yearsRange: '',
+		location: '',
+		workStyle: '',
+	};
 
 	connections: Connection[] = [
 		{
@@ -31,8 +42,10 @@ export class ConnectionsComponent {
 			role: 'UX Designer',
 			department: 'Design',
 			avatar: '/redguy.png',
-			status: 'online',
-			mutualConnections: 12
+			mutualConnections: 12,
+			location: 'San Francisco',
+			yearsExperience: 5,
+			workStyle: 'remote'
 		},
 		{
 			id: 2,
@@ -40,8 +53,10 @@ export class ConnectionsComponent {
 			role: 'Product Manager',
 			department: 'Product',
 			avatar: '/yellowguy.webp',
-			status: 'away',
-			mutualConnections: 8
+			mutualConnections: 8,
+			location: 'San Francisco',
+			yearsExperience: 3,
+			workStyle: 'hybrid'
 		},
 		{
 			id: 3,
@@ -49,9 +64,10 @@ export class ConnectionsComponent {
 			role: 'Data Scientist',
 			department: 'Analytics',
 			avatar: '/redguy.png',
-			status: 'offline',
-			lastSeen: '2 hours ago',
-			mutualConnections: 15
+			mutualConnections: 15,
+			location: 'New York',
+			yearsExperience: 7,
+			workStyle: 'office'
 		},
 		{
 			id: 4,
@@ -59,8 +75,10 @@ export class ConnectionsComponent {
 			role: 'Frontend Developer',
 			department: 'Engineering',
 			avatar: '/yellowguy.webp',
-			status: 'online',
-			mutualConnections: 23
+			mutualConnections: 23,
+			location: 'San Francisco',
+			yearsExperience: 4,
+			workStyle: 'remote'
 		},
 		{
 			id: 5,
@@ -68,9 +86,10 @@ export class ConnectionsComponent {
 			role: 'Marketing Manager',
 			department: 'Marketing',
 			avatar: '/redguy.png',
-			status: 'offline',
-			lastSeen: '1 day ago',
-			mutualConnections: 6
+			mutualConnections: 6,
+			location: 'Austin',
+			yearsExperience: 6,
+			workStyle: 'hybrid'
 		}
 	];
 
@@ -86,25 +105,53 @@ export class ConnectionsComponent {
 			);
 		}
 
-		// Filter by status
-		if (this.selectedFilter !== 'all') {
-			filtered = filtered.filter(connection => connection.status === this.selectedFilter);
+		// Apply filters
+		if (this.filters.department) {
+			filtered = filtered.filter(connection => 
+				connection.department.toLowerCase() === this.filters.department.toLowerCase()
+			);
+		}
+
+		if (this.filters.location) {
+			filtered = filtered.filter(connection => 
+				connection.location?.toLowerCase().includes(this.filters.location.toLowerCase())
+			);
+		}
+
+		if (this.filters.workStyle) {
+			filtered = filtered.filter(connection => 
+				connection.workStyle?.toLowerCase() === this.filters.workStyle.toLowerCase()
+			);
+		}
+
+		if (this.filters.yearsRange) {
+			const [min, max] = this.filters.yearsRange.split('-').map(n => parseInt(n));
+			if (!isNaN(min) && !isNaN(max)) {
+				filtered = filtered.filter(connection => {
+					const years = connection.yearsExperience || 0;
+					return years >= min && years <= max;
+				});
+			}
 		}
 
 		return filtered;
 	}
 
-	getStatusText(connection: Connection): string {
-		switch (connection.status) {
-			case 'online':
-				return 'Online';
-			case 'away':
-				return 'Away';
-			case 'offline':
-				return connection.lastSeen ? `Last seen ${connection.lastSeen}` : 'Offline';
-			default:
-				return '';
-		}
+	toggleFilters() {
+		this.showFilters = !this.showFilters;
+	}
+
+	onFiltersChange(newFilters: FilterCriteria) {
+		this.filters = { ...newFilters };
+	}
+
+	clearFilters() {
+		this.filters = {
+			department: '',
+			yearsRange: '',
+			location: '',
+			workStyle: '',
+		};
 	}
 
 	messageConnection(connection: Connection) {

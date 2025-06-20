@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HeaderComponent } from '../../components/header/header.component.ts';
+import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
 
 interface Chat {
 	id: number;
@@ -9,19 +11,32 @@ interface Chat {
 	lastMessage: string;
 	timestamp: string;
 	unreadCount: number;
-	isOnline: boolean;
 	isTyping?: boolean;
+	// Filter-related properties
+	department?: string;
+	location?: string;
+	workStyle?: string;
+	yearsExperience?: number;
 }
 
 @Component({
 	selector: 'app-chats',
 	standalone: true,
-	imports: [CommonModule, FormsModule],
+	imports: [CommonModule, FormsModule, HeaderComponent, FiltersComponent],
 	templateUrl: './chats.component.html',
 	styleUrls: ['./chats.component.css']
 })
 export class ChatsComponent {
 	searchTerm = '';
+	showFilters = false;
+
+	// Filter properties
+	filters: FilterCriteria = {
+		department: '',
+		yearsRange: '',
+		location: '',
+		workStyle: '',
+	};
 
 	chats: Chat[] = [
 		{
@@ -31,8 +46,11 @@ export class ChatsComponent {
 			lastMessage: 'Hey! Are you free for a quick call about the new design system?',
 			timestamp: '2m ago',
 			unreadCount: 2,
-			isOnline: true,
-			isTyping: false
+			isTyping: false,
+			department: 'Design',
+			location: 'San Francisco',
+			workStyle: 'remote',
+			yearsExperience: 5
 		},
 		{
 			id: 2,
@@ -41,7 +59,10 @@ export class ChatsComponent {
 			lastMessage: 'Thanks for the feedback on the product roadmap!',
 			timestamp: '1h ago',
 			unreadCount: 0,
-			isOnline: false
+			department: 'Product',
+			location: 'San Francisco',
+			workStyle: 'hybrid',
+			yearsExperience: 3
 		},
 		{
 			id: 3,
@@ -50,8 +71,11 @@ export class ChatsComponent {
 			lastMessage: 'The data analysis looks great. Can we schedule a review?',
 			timestamp: '3h ago',
 			unreadCount: 1,
-			isOnline: true,
-			isTyping: true
+			isTyping: true,
+			department: 'Analytics',
+			location: 'New York',
+			workStyle: 'office',
+			yearsExperience: 7
 		},
 		{
 			id: 4,
@@ -60,7 +84,10 @@ export class ChatsComponent {
 			lastMessage: 'I pushed the latest changes to the feature branch.',
 			timestamp: 'Yesterday',
 			unreadCount: 0,
-			isOnline: true
+			department: 'Engineering',
+			location: 'San Francisco',
+			workStyle: 'remote',
+			yearsExperience: 4
 		},
 		{
 			id: 5,
@@ -69,19 +96,71 @@ export class ChatsComponent {
 			lastMessage: 'Great work on the campaign launch! 🎉',
 			timestamp: '2 days ago',
 			unreadCount: 0,
-			isOnline: false
+			department: 'Marketing',
+			location: 'Austin',
+			workStyle: 'hybrid',
+			yearsExperience: 6
 		}
 	];
 
 	get filteredChats() {
-		if (!this.searchTerm) {
-			return this.chats;
+		let filtered = this.chats;
+
+		// Filter by search term
+		if (this.searchTerm) {
+			filtered = filtered.filter(chat =>
+				chat.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+				chat.lastMessage.toLowerCase().includes(this.searchTerm.toLowerCase())
+			);
 		}
 
-		return this.chats.filter(chat =>
-			chat.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-			chat.lastMessage.toLowerCase().includes(this.searchTerm.toLowerCase())
-		);
+		// Apply filters
+		if (this.filters.department) {
+			filtered = filtered.filter(chat => 
+				chat.department?.toLowerCase() === this.filters.department.toLowerCase()
+			);
+		}
+
+		if (this.filters.location) {
+			filtered = filtered.filter(chat => 
+				chat.location?.toLowerCase().includes(this.filters.location.toLowerCase())
+			);
+		}
+
+		if (this.filters.workStyle) {
+			filtered = filtered.filter(chat => 
+				chat.workStyle?.toLowerCase() === this.filters.workStyle.toLowerCase()
+			);
+		}
+
+		if (this.filters.yearsRange) {
+			const [min, max] = this.filters.yearsRange.split('-').map(n => parseInt(n));
+			if (!isNaN(min) && !isNaN(max)) {
+				filtered = filtered.filter(chat => {
+					const years = chat.yearsExperience || 0;
+					return years >= min && years <= max;
+				});
+			}
+		}
+
+		return filtered;
+	}
+
+	toggleFilters() {
+		this.showFilters = !this.showFilters;
+	}
+
+	onFiltersChange(newFilters: FilterCriteria) {
+		this.filters = { ...newFilters };
+	}
+
+	clearFilters() {
+		this.filters = {
+			department: '',
+			yearsRange: '',
+			location: '',
+			workStyle: '',
+		};
 	}
 
 	openChat(chat: Chat) {

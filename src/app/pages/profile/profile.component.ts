@@ -18,7 +18,6 @@ export class ProfileComponent {
 		bio: 'Passionate about building scalable web applications and mentoring junior developers. Always excited to collaborate on innovative projects.',
 		avatar: '/redguy.png',
 		connections: 42,
-		badges: ['Team Player', 'Innovator', 'Mentor'],
 		interests: ['Angular', 'TypeScript', 'Machine Learning', 'Photography']
 	};
 }

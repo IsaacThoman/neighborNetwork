@@ -1,6 +1,18 @@
 <div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 pb-20">
+  <!-- Header -->
+  <app-header (toggleFilters)="toggleFilters()"></app-header>
+
+  <!-- Filters Panel -->
+  <app-filters 
+    [showFilters]="showFilters"
+    [filters]="filters"
+    [profileCount]="filteredConnections.length"
+    (filtersChange)="onFiltersChange($event)"
+    (clearFilters)="clearFilters()">
+  </app-filters>
+
   <div class="max-w-md mx-auto px-4 py-6">
-    <!-- Header -->
+    <!-- Search Section -->
     <div class="mb-6">
       <h1 class="text-2xl font-bold text-gray-800 mb-4">My Connections</h1>
       
@@ -16,31 +28,6 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
       </div>
-
-      <!-- Filter Tabs -->
-      <div class="flex space-x-1 bg-white rounded-lg p-1 shadow-sm">
-        <button
-          (click)="selectedFilter = 'all'"
-          [class]="selectedFilter === 'all' ? 'bg-red-600 text-white' : 'text-gray-600'"
-          class="flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200"
-        >
-          All ({{ connections.length }})
-        </button>
-        <button
-          (click)="selectedFilter = 'online'"
-          [class]="selectedFilter === 'online' ? 'bg-red-600 text-white' : 'text-gray-600'"
-          class="flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200"
-        >
-          Online
-        </button>
-        <button
-          (click)="selectedFilter = 'offline'"
-          [class]="selectedFilter === 'offline' ? 'bg-red-600 text-white' : 'text-gray-600'"
-          class="flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors duration-200"
-        >
-          Offline
-        </button>
-      </div>
     </div>
 
     <!-- Connections List -->
@@ -50,19 +37,13 @@
         class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-4"
       >
         <div class="flex items-center space-x-3">
-          <!-- Avatar with Status -->
+          <!-- Avatar -->
           <div class="relative">
             <img 
               [src]="connection.avatar" 
               [alt]="connection.name"
               class="w-12 h-12 rounded-full"
             >
-            <!-- Status Indicator -->
-            <div 
-              [class]="'absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ' + 
-                       (connection.status === 'online' ? 'bg-green-500' : 
-                        connection.status === 'away' ? 'bg-yellow-500' : 'bg-gray-400')"
-            ></div>
           </div>
 
           <!-- Connection Info -->
@@ -85,10 +66,9 @@
               </button>
             </div>
 
-            <!-- Status and Mutual Connections -->
+            <!-- Mutual Connections -->
             <div class="flex items-center justify-between mt-2">
-              <span class="text-xs text-gray-500">{{ getStatusText(connection) }}</span>
-              <span class="text-xs text-gray-500">{{ connection.mutualConnections }} mutual</span>
+              <span class="text-xs text-gray-500">{{ connection.mutualConnections }} mutual connections</span>
             </div>
           </div>
         </div>
