@@ -17,12 +17,29 @@ export class AuthService {
     this.checkExistingSession();
   }
 
-  private checkExistingSession() {  
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
+  private async checkExistingSession() {
+    const storedAlias = localStorage.getItem('userAlias');
+    if (storedAlias) {
+      try {
+        await this.loadUserFromServer(storedAlias);
+      } catch (error) {
+        console.error('Failed to load user from server:', error);
+        // Clear invalid session
+        this.logout();
+      }
+    }
+  }
+
+  private async loadUserFromServer(alias: string): Promise<User> {
+    const response = await fetch(`/api/users/${alias}`);
+    
+    if (response.ok) {
+      const user = await response.json();
       this.currentUserSubject.next(user);
       this.isAuthenticatedSubject.next(true);
+      return user;
+    } else {
+      throw new Error('Failed to load user from server');
     }
   }
 
@@ -68,19 +85,39 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('currentUser');
+    localStorage.removeItem('userAlias');
     this.currentUserSubject.next(null);
     this.isAuthenticatedSubject.next(false);
   }
 
   private setCurrentUser(user: User) {
-    localStorage.setItem('currentUser', JSON.stringify(user));
+    // Only store the alias in localStorage
+    localStorage.setItem('userAlias', user.alias);
     this.currentUserSubject.next(user);
     this.isAuthenticatedSubject.next(true);
   }
 
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  getStoredAlias(): string | null {
+    return localStorage.getItem('userAlias');
+  }
+
+  async refreshUserData(): Promise<User | null> {
+    const alias = this.getStoredAlias();
+    if (!alias) {
+      return null;
+    }
+
+    try {
+      return await this.loadUserFromServer(alias);
+    } catch (error) {
+      console.error('Failed to refresh user data:', error);
+      this.logout();
+      return null;
+    }
   }
 
   isUserProfileComplete(): boolean {
@@ -109,7 +146,8 @@ export class AuthService {
 
       if (response.ok) {
         const updatedUser = await response.json();
-        this.setCurrentUser(updatedUser);
+        // Update the user in memory and refresh from server to ensure consistency
+        this.currentUserSubject.next(updatedUser);
         return updatedUser;
       } else {
         throw new Error('Failed to update user');

@@ -15,12 +15,30 @@ export default class IndexComponent implements OnInit {
 		private authService: AuthService
 	) {}
 
-	ngOnInit() {
+	async ngOnInit() {
 		// Check if user is authenticated
-		const user = this.authService.getCurrentUser();
+		let user = this.authService.getCurrentUser();
+		const storedAlias = this.authService.getStoredAlias();
+		
+		// If no stored alias, redirect to login
+		if (!storedAlias) {
+			this.router.navigate(['/login']);
+			return;
+		}
+		
+		// If user data is not loaded yet, try to refresh it
+		if (!user) {
+			try {
+				user = await this.authService.refreshUserData();
+			} catch (error) {
+				console.error('Failed to load user data:', error);
+				this.router.navigate(['/login']);
+				return;
+			}
+		}
 		
 		if (!user) {
-			// Not logged in, go to login
+			// Still no user data, go to login
 			this.router.navigate(['/login']);
 		} else if (!this.authService.isUserProfileComplete()) {
 			// Logged in but profile incomplete, go to edit

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { HeaderComponent } from '../../components/header/header.component.ts';
 import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
 import { Profile, ProfileCardComponent } from '../../components/profile-card/profile-card.component.ts';
@@ -37,6 +38,7 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
 	showFilters = false;
 	currentUser: User | null = null;
 	private keydownListener?: (event: KeyboardEvent) => void;
+	private userSubscription?: Subscription;
 
 	// Filter properties
 	filters: FilterCriteria = {
@@ -64,19 +66,24 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
 	) {}
 
 	ngOnInit() {
-		// Check authentication
-		this.currentUser = this.authService.getCurrentUser();
-		if (!this.currentUser) {
+		// Subscribe to current user changes
+		this.userSubscription = this.authService.currentUser$.subscribe(user => {
+			this.currentUser = user;
+			if (user && this.authService.isUserProfileComplete()) {
+				// User is loaded and profile is complete, proceed
+				if (!this.profiles.length) {
+					this.loadProfiles();
+				}
+			}
+		});
+
+		// Check authentication - redirect if no stored alias
+		const storedAlias = this.authService.getStoredAlias();
+		if (!storedAlias) {
 			this.router.navigate(['/login']);
 			return;
 		}
 
-		if (!this.authService.isUserProfileComplete()) {
-			this.router.navigate(['/profile-edit']);
-			return;
-		}
-
-		this.loadProfiles();
 		this.setupKeyboardListeners();
 
 		// Hide instructions after a few seconds
@@ -92,6 +99,9 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
 	ngOnDestroy() {
 		if (this.keydownListener) {
 			document.removeEventListener('keydown', this.keydownListener);
+		}
+		if (this.userSubscription) {
+			this.userSubscription.unsubscribe();
 		}
 	}
 
