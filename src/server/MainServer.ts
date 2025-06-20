@@ -184,7 +184,7 @@ export class MainServer {
 						location: 'Atlanta, GA',
 						workStyle: 'Hybrid',
 						bio: 'Software Engineer @ SF, currently working on Team Carbon',
-						profileImage: '/isaac.png',
+						profileImage: '/isaac.webp',
 						interests: ['Process Automation', 'Digital Transformation', 'Team Leadership'],
 					},
 					{
@@ -197,7 +197,7 @@ export class MainServer {
 						location: 'Atlanta, GA',
 						workStyle: 'Remote',
 						bio: 'CS student at University of Denver | SWE Intern at State Farm.',
-						profileImage: '/mac.png',
+						profileImage: '/mac.webp',
 						interests: ['Data', 'Development', 'Problem Solving'],
 					},
 					{

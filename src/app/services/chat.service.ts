@@ -133,7 +133,7 @@ export class ChatService {
 			{
 				id: 1,
 				name: 'Isaac Thoman',
-				avatar: '/isaac.png',
+				avatar: '/isaac.webp',
 				department: 'Design',
 				location: 'San Francisco',
 				workStyle: 'remote',
@@ -161,7 +161,7 @@ export class ChatService {
 			{
 				id: 4,
 				name: 'Michael Carroll',
-				avatar: '/mac.png',
+				avatar: '/mac.webp',
 				department: 'Engineering',
 				location: 'San Francisco',
 				workStyle: 'remote',
