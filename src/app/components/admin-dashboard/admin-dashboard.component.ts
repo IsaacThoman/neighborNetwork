@@ -94,7 +94,7 @@ import { isUserComplete, User } from '../../types/user.types.ts';
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <button 
-                      *ngIf="user.alias !== 'admin'"
+                      *ngIf="user.alias !== 'ADMIN'"
                       (click)="deleteUser(user.alias)"
                       class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition-colors"
                       [disabled]="deletingUsers.has(user.alias)"

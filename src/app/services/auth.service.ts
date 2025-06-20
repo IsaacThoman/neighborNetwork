@@ -45,6 +45,7 @@ export class AuthService {
 
 	async login(alias: string): Promise<{ user: User; isNewUser: boolean }> {
 		try {
+			alias = alias.toUpperCase();
 			// First check if user exists
 			const response = await fetch(`/api/users/${alias}`);
 
@@ -193,6 +194,6 @@ export class AuthService {
 
 	isAdmin(): boolean {
 		const user = this.getCurrentUser();
-		return user?.alias === 'admin';
+		return user?.alias === 'ADMIN';
 	}
 }

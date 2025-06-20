@@ -42,7 +42,7 @@ export class AuthGuard {
 		}
 
 		// Check if user is admin
-		if (currentUser.alias === 'admin') {
+		if (currentUser.alias === 'ADMIN') {
 			this.router.navigate(['/admin']);
 			return false;
 		}
@@ -112,7 +112,7 @@ export class AuthGuard {
 			return false;
 		}
 
-		if (currentUser.alias !== 'admin') {
+		if (currentUser.alias !== 'ADMIN') {
 			this.router.navigate(['/']);
 			return false;
 		}
