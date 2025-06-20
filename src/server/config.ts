@@ -69,4 +69,5 @@ function parseConfig(env: Record<string, string>) {
 
 const rawConfig = await updateEnvFile(defaults);
 const config = parseConfig(rawConfig);
+
 export default config;

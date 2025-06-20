@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewCh
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { AuthService } from '../../services/auth.service.ts';
 import { User } from '../../types/user.types.ts';
 
@@ -43,6 +44,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 
 	constructor(
 		private router: Router,
+		private location: Location,
 		private authService: AuthService
 	) {}
 
@@ -222,7 +224,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 	}
 
 	goBack() {
-		this.router.navigate(['/chats']);
+		this.location.back();
 	}
 
 	isMyMessage(message: Message): boolean {
