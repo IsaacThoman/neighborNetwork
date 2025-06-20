@@ -11,12 +11,12 @@ import { AuthService } from '../services/auth.service.ts';
 	template: `
 		<app-chats></app-chats>
 		<app-bottom-navigation></app-bottom-navigation>
-	`
+	`,
 })
 export default class ChatsPageComponent implements OnInit {
 	constructor(
 		private router: Router,
-		private authService: AuthService
+		private authService: AuthService,
 	) {}
 
 	ngOnInit() {

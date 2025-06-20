@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service.ts';
-import { User, isUserComplete } from '../../types/user.types.ts';
+import { isUserComplete, User } from '../../types/user.types.ts';
 
 @Component({
-  selector: 'admin-dashboard',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
+	selector: 'admin-dashboard',
+	standalone: true,
+	imports: [CommonModule],
+	template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Header -->
       <div class="bg-white shadow-sm border-b">
@@ -122,102 +122,102 @@ import { User, isUserComplete } from '../../types/user.types.ts';
       </div>
     </div>
   `,
-  styles: [`
+	styles: [`
     .status-complete {
       @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
     }
     .status-incomplete {
       @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800;
     }
-  `]
+  `],
 })
 export class AdminDashboardComponent implements OnInit {
-  users: User[] = [];
-  loading = true;
-  deletingUsers = new Set<string>();
+	users: User[] = [];
+	loading = true;
+	deletingUsers = new Set<string>();
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router,
+	) {}
 
-  ngOnInit() {
-    this.loadUsers();
-  }
+	ngOnInit() {
+		this.loadUsers();
+	}
 
-  async loadUsers() {
-    try {
-      console.log('Admin dashboard: Starting to load users...');
-      this.loading = true;
-      
-      // Add timeout to prevent infinite loading
-      const timeoutPromise = new Promise<never>((_, reject) => 
-        setTimeout(() => reject(new Error('Request timeout')), 10000)
-      );
-      
-      const usersPromise = this.authService.getAllUsers();
-      
-      this.users = await Promise.race([usersPromise, timeoutPromise]);
-      console.log('Admin dashboard: Loaded users:', this.users);
-      
-      // Ensure users is always an array
-      if (!Array.isArray(this.users)) {
-        this.users = [];
-      }
-    } catch (error) {
-      console.error('Error loading users:', error);
-      this.loading = false; // Make sure loading is set to false on error
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      alert(`Failed to load users: ${errorMessage}. Please check the console for more details.`);
-    } finally {
-      this.loading = false;
-    }
-  }
+	async loadUsers() {
+		try {
+			console.log('Admin dashboard: Starting to load users...');
+			this.loading = true;
 
-  async deleteUser(alias: string) {
-    if (!confirm(`Are you sure you want to delete user "${alias}"? This action cannot be undone.`)) {
-      return;
-    }
+			// Add timeout to prevent infinite loading
+			const timeoutPromise = new Promise<never>((_, reject) =>
+				setTimeout(() => reject(new Error('Request timeout')), 10000)
+			);
 
-    try {
-      this.deletingUsers.add(alias);
-      const success = await this.authService.deleteUser(alias);
+			const usersPromise = this.authService.getAllUsers();
 
-      if (success) {
-        this.users = this.users.filter(user => user.alias !== alias);
-      } else {
-        alert('Failed to delete user. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      alert('Error occurred while deleting user. Please try again.');
-    } finally {
-      this.deletingUsers.delete(alias);
-    }
-  }
+			this.users = await Promise.race([usersPromise, timeoutPromise]);
+			console.log('Admin dashboard: Loaded users:', this.users);
 
-  isProfileComplete(user: User): boolean {
-    return isUserComplete(user);
-  }
+			// Ensure users is always an array
+			if (!Array.isArray(this.users)) {
+				this.users = [];
+			}
+		} catch (error) {
+			console.error('Error loading users:', error);
+			this.loading = false; // Make sure loading is set to false on error
+			const errorMessage = error instanceof Error ? error.message : String(error);
+			alert(`Failed to load users: ${errorMessage}. Please check the console for more details.`);
+		} finally {
+			this.loading = false;
+		}
+	}
 
-  getStatusClass(user: User): string {
-    return this.isProfileComplete(user) ? 'status-complete' : 'status-incomplete';
-  }
+	async deleteUser(alias: string) {
+		if (!confirm(`Are you sure you want to delete user "${alias}"? This action cannot be undone.`)) {
+			return;
+		}
 
-  get completeProfiles(): number {
-    return this.users.filter(user => this.isProfileComplete(user)).length;
-  }
+		try {
+			this.deletingUsers.add(alias);
+			const success = await this.authService.deleteUser(alias);
 
-  get incompleteProfiles(): number {
-    return this.users.filter(user => !this.isProfileComplete(user)).length;
-  }
+			if (success) {
+				this.users = this.users.filter((user) => user.alias !== alias);
+			} else {
+				alert('Failed to delete user. Please try again.');
+			}
+		} catch (error) {
+			console.error('Error deleting user:', error);
+			alert('Error occurred while deleting user. Please try again.');
+		} finally {
+			this.deletingUsers.delete(alias);
+		}
+	}
 
-  trackByAlias(_index: number, user: User): string {
-    return user.alias;
-  }
+	isProfileComplete(user: User): boolean {
+		return isUserComplete(user);
+	}
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
+	getStatusClass(user: User): string {
+		return this.isProfileComplete(user) ? 'status-complete' : 'status-incomplete';
+	}
+
+	get completeProfiles(): number {
+		return this.users.filter((user) => this.isProfileComplete(user)).length;
+	}
+
+	get incompleteProfiles(): number {
+		return this.users.filter((user) => !this.isProfileComplete(user)).length;
+	}
+
+	trackByAlias(_index: number, user: User): string {
+		return user.alias;
+	}
+
+	logout() {
+		this.authService.logout();
+		this.router.navigate(['/login']);
+	}
 }

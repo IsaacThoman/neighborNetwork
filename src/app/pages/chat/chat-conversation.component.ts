@@ -1,10 +1,10 @@
-import { Component, Input, OnInit, OnDestroy, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AuthService } from '../../services/auth.service.ts';
-import { ChatService, Message, ChatUser } from '../../services/chat.service.ts';
+import { ChatService, ChatUser, Message } from '../../services/chat.service.ts';
 import { User } from '../../types/user.types.ts';
 
 @Component({
@@ -12,12 +12,15 @@ import { User } from '../../types/user.types.ts';
 	standalone: true,
 	imports: [CommonModule, FormsModule],
 	templateUrl: './chat-conversation.component.html',
-	styleUrls: ['./chat-conversation.component.css']
+	styleUrls: ['./chat-conversation.component.css'],
 })
 export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewChecked {
-	@Input() chatId!: string;
-	@ViewChild('messagesContainer') messagesContainer!: ElementRef;
-	@ViewChild('messageInput') messageInput!: ElementRef;
+	@Input()
+	chatId!: string;
+	@ViewChild('messagesContainer')
+	messagesContainer!: ElementRef;
+	@ViewChild('messageInput')
+	messageInput!: ElementRef;
 
 	currentUser: User | null = null;
 	chatUser: ChatUser | null = null;
@@ -30,7 +33,7 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 		private router: Router,
 		private location: Location,
 		private authService: AuthService,
-		private chatService: ChatService
+		private chatService: ChatService,
 	) {}
 	ngOnInit() {
 		this.currentUser = this.authService.getCurrentUser();
@@ -65,15 +68,15 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 			senderName: this.currentUser.name || 'Unknown User',
 			content: this.newMessage.trim(),
 			timestamp: new Date(),
-			isRead: false
+			isRead: false,
 		};
 
 		// Add message through chat service
 		this.chatService.addMessage(this.chatId, message);
-		
+
 		// Reload messages to get updated list
 		this.messages = this.chatService.getMessages(this.chatId);
-		
+
 		this.newMessage = '';
 
 		// Simulate response after a delay
@@ -85,14 +88,14 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 		if (!this.chatUser) return;
 
 		const responses = [
-			"That sounds great!",
+			'That sounds great!',
 			"I'll take a look at that.",
-			"Thanks for sharing!",
-			"Let me think about it.",
-			"Perfect timing!",
-			"I agree with that approach.",
-			"Can we schedule a quick call?",
-			"I'll get back to you soon."
+			'Thanks for sharing!',
+			'Let me think about it.',
+			'Perfect timing!',
+			'I agree with that approach.',
+			'Can we schedule a quick call?',
+			"I'll get back to you soon.",
 		];
 
 		const randomResponse = responses[Math.floor(Math.random() * responses.length)];
@@ -103,12 +106,12 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 			senderName: this.chatUser.name,
 			content: randomResponse,
 			timestamp: new Date(),
-			isRead: false
+			isRead: false,
 		};
 
 		// Add response through chat service
 		this.chatService.addMessage(this.chatId, response);
-		
+
 		// Reload messages to get updated list
 		this.messages = this.chatService.getMessages(this.chatId);
 	}
@@ -146,30 +149,30 @@ export class ChatConversationComponent implements OnInit, OnDestroy, AfterViewCh
 	formatDate(timestamp: Date): string {
 		const today = new Date();
 		const messageDate = new Date(timestamp);
-		
+
 		if (messageDate.toDateString() === today.toDateString()) {
 			return 'Today';
 		}
-		
+
 		const yesterday = new Date(today);
 		yesterday.setDate(yesterday.getDate() - 1);
-		
+
 		if (messageDate.toDateString() === yesterday.toDateString()) {
 			return 'Yesterday';
 		}
-		
+
 		return messageDate.toLocaleDateString();
 	}
 
 	shouldShowDateSeparator(index: number): boolean {
 		if (index === 0) return true;
-		
+
 		const currentMessage = this.messages[index];
 		const previousMessage = this.messages[index - 1];
-		
+
 		const currentDate = new Date(currentMessage.timestamp).toDateString();
 		const previousDate = new Date(previousMessage.timestamp).toDateString();
-		
+
 		return currentDate !== previousDate;
 	}
 

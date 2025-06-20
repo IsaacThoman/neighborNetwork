@@ -1,127 +1,127 @@
 /* Chat Conversation Component Styles */
 :host {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #f9fafb;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+	background-color: #f9fafb;
 }
 
 /* Typing animation */
 .typing-dots {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
+	display: inline-flex;
+	align-items: center;
+	gap: 2px;
 }
 
 .typing-dots span {
-  display: inline-block;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: #6b7280;
-  animation: typing 1.4s infinite ease-in-out;
+	display: inline-block;
+	width: 4px;
+	height: 4px;
+	border-radius: 50%;
+	background-color: #6b7280;
+	animation: typing 1.4s infinite ease-in-out;
 }
 
 .typing-dots span:nth-child(1) {
-  animation-delay: -0.32s;
+	animation-delay: -0.32s;
 }
 
 .typing-dots span:nth-child(2) {
-  animation-delay: -0.16s;
+	animation-delay: -0.16s;
 }
 
 .typing-dots span:nth-child(3) {
-  animation-delay: 0s;
+	animation-delay: 0s;
 }
 
 @keyframes typing {
-  0%, 80%, 100% {
-    transform: scale(0.8);
-    opacity: 0.5;
-  }
-  40% {
-    transform: scale(1);
-    opacity: 1;
-  }
+	0%, 80%, 100% {
+		transform: scale(0.8);
+		opacity: 0.5;
+	}
+	40% {
+		transform: scale(1);
+		opacity: 1;
+	}
 }
 
 /* Message input auto-resize */
 textarea {
-  resize: none;
-  overflow-y: hidden;
-  line-height: 1.5;
+	resize: none;
+	overflow-y: hidden;
+	line-height: 1.5;
 }
 
 /* Smooth scrolling for messages */
 .messages-container {
-  scroll-behavior: smooth;
+	scroll-behavior: smooth;
 }
 
 /* Custom scrollbar */
 .messages-container::-webkit-scrollbar {
-  width: 6px;
+	width: 6px;
 }
 
 .messages-container::-webkit-scrollbar-track {
-  background: transparent;
+	background: transparent;
 }
 
 .messages-container::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
+	background: #d1d5db;
+	border-radius: 3px;
 }
 
 .messages-container::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+	background: #9ca3af;
 }
 
 /* Message bubble animations */
 .message-bubble {
-  animation: fadeInUp 0.3s ease-out;
+	animation: fadeInUp 0.3s ease-out;
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
 }
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
-  .max-w-xs {
-    max-width: 280px;
-  }
+	.max-w-xs {
+		max-width: 280px;
+	}
 }
 
 /* Focus states */
 textarea:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+	box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Button hover states */
 button:hover {
-  transform: translateY(-1px);
+	transform: translateY(-1px);
 }
 
 button:active {
-  transform: translateY(0);
+	transform: translateY(0);
 }
 
 /* Online indicator pulse */
 .bg-green-500 {
-  animation: pulse-green 2s infinite;
+	animation: pulse-green 2s infinite;
 }
 
 @keyframes pulse-green {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.7;
-  }
+	0%, 100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.7;
+	}
 }

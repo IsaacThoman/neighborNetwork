@@ -25,7 +25,7 @@ import { User } from '../../types/user.types.ts';
 		EmptyStateComponent,
 	],
 	templateUrl: './explore.component.html',
-	styleUrls: ['./explore.component.css']
+	styleUrls: ['./explore.component.css'],
 })
 export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
 	profiles: Profile[] = [];
@@ -67,7 +67,7 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	ngOnInit() {
 		// Subscribe to current user changes
-		this.userSubscription = this.authService.currentUser$.subscribe(user => {
+		this.userSubscription = this.authService.currentUser$.subscribe((user) => {
 			this.currentUser = user;
 			if (user && this.authService.isUserProfileComplete()) {
 				// User is loaded and profile is complete, proceed

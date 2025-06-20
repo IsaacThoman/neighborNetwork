@@ -1,55 +1,59 @@
 <div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 pb-20">
-  <!-- Header -->
-  <app-header 
-    (toggleFilters)="toggleFilters()" 
-    [userAlias]="currentUser?.alias">
-  </app-header>
+	<!-- Header -->
+	<app-header
+		(toggleFilters)="toggleFilters()"
+		[userAlias]="currentUser?.alias"
+	>
+	</app-header>
 
-  <!-- Filters Panel -->
-  <app-filters 
-    [showFilters]="showFilters"
-    [filters]="filters"
-    [profileCount]="filteredProfiles.length"
-    (filtersChange)="onFiltersChange($event)"
-    (clearFilters)="clearFilters()">
-  </app-filters>
+	<!-- Filters Panel -->
+	<app-filters
+		[showFilters]="showFilters"
+		[filters]="filters"
+		[profileCount]="filteredProfiles.length"
+		(filtersChange)="onFiltersChange($event)"
+		(clearFilters)="clearFilters()"
+	>
+	</app-filters>
 
-  <!-- Main Content -->
-  <main class="max-w-4xl mx-auto px-4 py-6">
-    <div class="flex justify-center">
-      <div class="w-full max-w-md relative" *ngIf="currentProfile">
-        <!-- Profile Card -->
-        <app-profile-card 
-          [profile]="currentProfile"
-          [isAnimating]="isAnimating"
-          [swipeDirection]="swipeDirection"
-          [swipeOffset]="swipeOffset"
-          [rotateAngle]="rotateAngle"
-          (touchStart)="onTouchStart($event)"
-          (touchMove)="onTouchMove($event)"
-          (touchEnd)="onTouchEnd($event)">
-        </app-profile-card>
+	<!-- Main Content -->
+	<main class="max-w-4xl mx-auto px-4 py-6">
+		<div class="flex justify-center">
+			<div class="w-full max-w-md relative" *ngIf="currentProfile">
+				<!-- Profile Card -->
+				<app-profile-card
+					[profile]="currentProfile"
+					[isAnimating]="isAnimating"
+					[swipeDirection]="swipeDirection"
+					[swipeOffset]="swipeOffset"
+					[rotateAngle]="rotateAngle"
+					(touchStart)="onTouchStart($event)"
+					(touchMove)="onTouchMove($event)"
+					(touchEnd)="onTouchEnd($event)"
+				>
+				</app-profile-card>
 
-        <!-- Swipe Instructions -->
-        <div class="text-center mt-4" *ngIf="showInstructions">
-          <p class="text-gray-600 text-sm">Swipe or use buttons to connect with colleagues</p>
-        </div>
+				<!-- Swipe Instructions -->
+				<div class="text-center mt-4" *ngIf="showInstructions">
+					<p class="text-gray-600 text-sm">Swipe or use buttons to connect with colleagues</p>
+				</div>
 
-        <!-- No More Profiles -->
-        <app-empty-state *ngIf="!currentProfile && filteredProfiles.length === 0"></app-empty-state>
-      </div>
-    </div>
+				<!-- No More Profiles -->
+				<app-empty-state *ngIf="!currentProfile && filteredProfiles.length === 0"></app-empty-state>
+			</div>
+		</div>
 
-    <!-- Action Buttons -->
-    <app-action-buttons 
-      *ngIf="currentProfile"
-      (pass)="passProfile()"
-      (connect)="connectProfile()">
-    </app-action-buttons>
+		<!-- Action Buttons -->
+		<app-action-buttons
+			*ngIf="currentProfile"
+			(pass)="passProfile()"
+			(connect)="connectProfile()"
+		>
+		</app-action-buttons>
 
-    <!-- Keyboard Instructions -->
-    <div class="text-center mt-6">
-      <p class="text-xs text-gray-500">Use ← → arrow keys or swipe to navigate</p>
-    </div>
-  </main>
+		<!-- Keyboard Instructions -->
+		<div class="text-center mt-6">
+			<p class="text-xs text-gray-500">Use ← → arrow keys or swipe to navigate</p>
+		</div>
+	</main>
 </div>

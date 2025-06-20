@@ -11,12 +11,12 @@ import { AuthService } from '../services/auth.service.ts';
 	template: `
 		<app-connections></app-connections>
 		<app-bottom-navigation></app-bottom-navigation>
-	`
+	`,
 })
 export default class ConnectionsPageComponent implements OnInit {
 	constructor(
 		private router: Router,
-		private authService: AuthService
+		private authService: AuthService,
 	) {}
 
 	ngOnInit() {

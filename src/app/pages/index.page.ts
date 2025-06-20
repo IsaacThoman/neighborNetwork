@@ -12,20 +12,20 @@ import { AuthService } from '../services/auth.service.ts';
 export default class IndexComponent implements OnInit {
 	constructor(
 		private router: Router,
-		private authService: AuthService
+		private authService: AuthService,
 	) {}
 
 	async ngOnInit() {
 		// Check if user is authenticated
 		let user = this.authService.getCurrentUser();
 		const storedAlias = this.authService.getStoredAlias();
-		
+
 		// If no stored alias, redirect to login
 		if (!storedAlias) {
 			this.router.navigate(['/login']);
 			return;
 		}
-		
+
 		// If user data is not loaded yet, try to refresh it
 		if (!user) {
 			try {
@@ -36,7 +36,7 @@ export default class IndexComponent implements OnInit {
 				return;
 			}
 		}
-		
+
 		if (!user) {
 			// Still no user data, go to login
 			this.router.navigate(['/login']);

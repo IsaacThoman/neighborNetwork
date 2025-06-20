@@ -50,11 +50,11 @@ export class MainServer {
 			try {
 				const users: User[] = [];
 				const iter = this.kv.list<User>({ prefix: ['users'] });
-				
+
 				for await (const { value } of iter) {
 					users.push(value);
 				}
-				
+
 				context.response.type = 'application/json';
 				context.response.body = JSON.stringify(users);
 			} catch (err) {
@@ -69,30 +69,30 @@ export class MainServer {
 			try {
 				const alias = context.params.alias;
 				const result = await this.kv.get<User>(['users', alias]);
-				
+
 				if (result.value) {
 					context.response.type = 'application/json';
 					context.response.body = JSON.stringify(result.value);
 				} else {
 					this.router.post('/api/users', async (context) => {
-					try {
-						const body = await context.request.body.json();
-						const user: User = {
-							...body,
-							createdAt: new Date(),
-							updatedAt: new Date()
-						};
+						try {
+							const body = await context.request.body.json();
+							const user: User = {
+								...body,
+								createdAt: new Date(),
+								updatedAt: new Date(),
+							};
 
-						await this.kv.set(['users', user.alias], user);
-						
-						context.response.type = 'application/json';
-						context.response.body = JSON.stringify(user);
-					} catch (err) {
-						console.error('Error creating user:', err);
-						context.response.status = 500;
-						context.response.body = JSON.stringify({ error: 'Internal server error' });
-					}
-					})
+							await this.kv.set(['users', user.alias], user);
+
+							context.response.type = 'application/json';
+							context.response.body = JSON.stringify(user);
+						} catch (err) {
+							console.error('Error creating user:', err);
+							context.response.status = 500;
+							context.response.body = JSON.stringify({ error: 'Internal server error' });
+						}
+					});
 				}
 			} catch (err) {
 				console.error('Error getting user:', err);
@@ -107,11 +107,11 @@ export class MainServer {
 				const user: User = {
 					...body,
 					createdAt: new Date(),
-					updatedAt: new Date()
+					updatedAt: new Date(),
 				};
 
 				await this.kv.set(['users', user.alias], user);
-				
+
 				context.response.type = 'application/json';
 				context.response.body = JSON.stringify(user);
 			} catch (err) {
@@ -128,11 +128,11 @@ export class MainServer {
 				const user: User = {
 					...body,
 					alias, // Ensure alias matches URL
-					updatedAt: new Date()
+					updatedAt: new Date(),
 				};
 
 				await this.kv.set(['users', alias], user);
-				
+
 				context.response.type = 'application/json';
 				context.response.body = JSON.stringify(user);
 			} catch (err) {
@@ -146,7 +146,7 @@ export class MainServer {
 			try {
 				const alias = context.params.alias;
 				await this.kv.delete(['users', alias]);
-				
+
 				context.response.status = 204;
 			} catch (err) {
 				console.error('Error deleting user:', err);
@@ -183,8 +183,7 @@ export class MainServer {
 						yearsAtCompany: 1,
 						location: 'Atlanta, GA',
 						workStyle: 'Hybrid',
-						bio:
-							'Software Engineer @ SF, currently working on Team Carbon',
+						bio: 'Software Engineer @ SF, currently working on Team Carbon',
 						profileImage: '/isaac.png',
 						interests: ['Process Automation', 'Digital Transformation', 'Team Leadership'],
 					},
@@ -197,10 +196,9 @@ export class MainServer {
 						yearsAtCompany: 2,
 						location: 'Atlanta, GA',
 						workStyle: 'Remote',
-						bio:
-							'CS student at University of Denver | SWE Intern at State Farm.',
+						bio: 'CS student at University of Denver | SWE Intern at State Farm.',
 						profileImage: '/mac.png',
-						interests: ['Data','Development','Problem Solving'],
+						interests: ['Data', 'Development', 'Problem Solving'],
 					},
 					{
 						id: 4,
@@ -211,8 +209,7 @@ export class MainServer {
 						yearsAtCompany: 5,
 						location: 'Dallas, TX',
 						workStyle: 'Hybrid',
-						bio:
-							'CS Major from UGA | Data Engineer Intern',
+						bio: 'CS Major from UGA | Data Engineer Intern',
 						profileImage: '/colin.webp',
 						interests: ['Rock Climbing', 'Puzzles'],
 					},
@@ -263,7 +260,6 @@ export class MainServer {
 
 	private start() {
 		try {
-			
 			Deno.serve({
 				port: config.server.port,
 				hostname: config.server.hostname,
@@ -275,7 +271,6 @@ export class MainServer {
 					return new Response('Internal Server Error', { status: 500 });
 				}
 			});
-			
 		} catch (error) {
 			console.error('Failed to start server:', error);
 			Deno.exit(1);

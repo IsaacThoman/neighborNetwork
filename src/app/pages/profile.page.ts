@@ -11,12 +11,12 @@ import { AuthService } from '../services/auth.service.ts';
 	template: `
 		<app-profile></app-profile>
 		<app-bottom-navigation></app-bottom-navigation>
-	`
+	`,
 })
 export default class ProfilePageComponent implements OnInit {
 	constructor(
 		private router: Router,
-		private authService: AuthService
+		private authService: AuthService,
 	) {}
 
 	ngOnInit() {

@@ -7,6 +7,6 @@ import { RouterModule } from '@angular/router';
 	standalone: true,
 	imports: [CommonModule, RouterModule],
 	templateUrl: './bottom-navigation.component.html',
-	styleUrls: ['./bottom-navigation.component.css']
+	styleUrls: ['./bottom-navigation.component.css'],
 })
 export class BottomNavigationComponent {}

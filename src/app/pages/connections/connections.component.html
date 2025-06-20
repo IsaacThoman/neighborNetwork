@@ -1,90 +1,112 @@
 <div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 pb-20">
-  <!-- Header -->
-  <app-header 
-    (toggleFilters)="toggleFilters()"
-    [userAlias]="currentUser?.alias">
-  </app-header>
+	<!-- Header -->
+	<app-header
+		(toggleFilters)="toggleFilters()"
+		[userAlias]="currentUser?.alias"
+	>
+	</app-header>
 
-  <!-- Filters Panel -->
-  <app-filters 
-    [showFilters]="showFilters"
-    [filters]="filters"
-    [profileCount]="filteredConnections.length"
-    (filtersChange)="onFiltersChange($event)"
-    (clearFilters)="clearFilters()">
-  </app-filters>
+	<!-- Filters Panel -->
+	<app-filters
+		[showFilters]="showFilters"
+		[filters]="filters"
+		[profileCount]="filteredConnections.length"
+		(filtersChange)="onFiltersChange($event)"
+		(clearFilters)="clearFilters()"
+	>
+	</app-filters>
 
-  <div class="max-w-md mx-auto px-4 py-6">
-    <!-- Search Section -->
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-800 mb-4">My Connections</h1>
-      
-      <!-- Search Bar -->
-      <div class="relative mb-4">
-        <input
-          type="text"
-          [(ngModel)]="searchTerm"
-          placeholder="Search connections..."
-          class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
-        >
-        <svg class="absolute left-3 top-3.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-      </div>
-    </div>
+	<div class="max-w-md mx-auto px-4 py-6">
+		<!-- Search Section -->
+		<div class="mb-6">
+			<h1 class="text-2xl font-bold text-gray-800 mb-4">My Connections</h1>
 
-    <!-- Connections List -->
-    <div class="space-y-3">
-      <div 
-        *ngFor="let connection of filteredConnections" 
-        class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-4"
-      >
-        <div class="flex items-center space-x-3">
-          <!-- Avatar -->
-          <div class="relative">
-            <img 
-              [src]="connection.avatar" 
-              [alt]="connection.name"
-              class="w-12 h-12 rounded-full"
-            >
-          </div>
+			<!-- Search Bar -->
+			<div class="relative mb-4">
+				<input
+					type="text"
+					[(ngModel)]="searchTerm"
+					placeholder="Search connections..."
+					class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white"
+				>
+				<svg
+					class="absolute left-3 top-3.5 w-5 h-5 text-gray-400"
+					fill="none"
+					stroke="currentColor"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+					/>
+				</svg>
+			</div>
+		</div>
 
-          <!-- Connection Info -->
-          <div class="flex-1 min-w-0">
-            <div class="flex items-start justify-between">
-              <div>
-                <h3 class="font-semibold text-gray-800 truncate">{{ connection.name }}</h3>
-                <p class="text-sm text-gray-600">{{ connection.role }}</p>
-                <p class="text-xs text-gray-500">{{ connection.department }}</p>
-              </div>
-              
-              <!-- Message Button -->
-              <button
-                (click)="messageConnection(connection)"
-                class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors duration-200 flex-shrink-0"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                </svg>
-              </button>
-            </div>
+		<!-- Connections List -->
+		<div class="space-y-3">
+			<div
+				*ngFor="let connection of filteredConnections"
+				class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-200 p-4"
+			>
+				<div class="flex items-center space-x-3">
+					<!-- Avatar -->
+					<div class="relative">
+						<img
+							[src]="connection.avatar"
+							[alt]="connection.name"
+							class="w-12 h-12 rounded-full"
+						>
+					</div>
 
-            <!-- Mutual Connections -->
-            <div class="flex items-center justify-between mt-2">
-              <span class="text-xs text-gray-500">{{ connection.mutualConnections }} mutual connections</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+					<!-- Connection Info -->
+					<div class="flex-1 min-w-0">
+						<div class="flex items-start justify-between">
+							<div>
+								<h3 class="font-semibold text-gray-800 truncate">{{ connection.name }}</h3>
+								<p class="text-sm text-gray-600">{{ connection.role }}</p>
+								<p class="text-xs text-gray-500">{{ connection.department }}</p>
+							</div>
 
-    <!-- Empty State -->
-    <div *ngIf="filteredConnections.length === 0" class="text-center py-12">
-      <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-      </svg>
-      <h3 class="text-gray-600 text-lg font-medium mb-2">No connections found</h3>
-      <p class="text-gray-500 text-sm">Try adjusting your search or filters</p>
-    </div>
-  </div>
+							<!-- Message Button -->
+							<button
+								(click)="messageConnection(connection)"
+								class="bg-red-600 text-white p-2 rounded-full hover:bg-red-700 transition-colors duration-200 flex-shrink-0"
+							>
+								<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+									/>
+								</svg>
+							</button>
+						</div>
+
+						<!-- Mutual Connections -->
+						<div class="flex items-center justify-between mt-2">
+							<span class="text-xs text-gray-500">{{ connection.mutualConnections }} mutual connections</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Empty State -->
+		<div *ngIf="filteredConnections.length === 0" class="text-center py-12">
+			<svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+				/>
+			</svg>
+			<h3 class="text-gray-600 text-lg font-medium mb-2">No connections found</h3>
+			<p class="text-gray-500 text-sm">Try adjusting your search or filters</p>
+		</div>
+	</div>
 </div>

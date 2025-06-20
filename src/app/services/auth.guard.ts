@@ -3,120 +3,120 @@ import { Router } from '@angular/router';
 import { AuthService } from './auth.service.ts';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root',
 })
 export class AuthGuard {
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router,
+	) {}
 
-  async canActivate(): Promise<boolean> {
-    const user = this.authService.getCurrentUser();
-    const storedAlias = this.authService.getStoredAlias();
-    
-    // If no stored alias, redirect to login
-    if (!storedAlias) {
-      this.router.navigate(['/login']);
-      return false;
-    }
+	async canActivate(): Promise<boolean> {
+		const user = this.authService.getCurrentUser();
+		const storedAlias = this.authService.getStoredAlias();
 
-    // If user data is not loaded yet, try to refresh it
-    if (!user) {
-      try {
-        const refreshedUser = await this.authService.refreshUserData();
-        if (!refreshedUser) {
-          this.router.navigate(['/login']);
-          return false;
-        }
-      } catch {
-        this.router.navigate(['/login']);
-        return false;
-      }
-    }
+		// If no stored alias, redirect to login
+		if (!storedAlias) {
+			this.router.navigate(['/login']);
+			return false;
+		}
 
-    const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) {
-      this.router.navigate(['/login']);
-      return false;
-    }
+		// If user data is not loaded yet, try to refresh it
+		if (!user) {
+			try {
+				const refreshedUser = await this.authService.refreshUserData();
+				if (!refreshedUser) {
+					this.router.navigate(['/login']);
+					return false;
+				}
+			} catch {
+				this.router.navigate(['/login']);
+				return false;
+			}
+		}
 
-    // Check if user is admin
-    if (currentUser.alias === 'admin') {
-      this.router.navigate(['/admin']);
-      return false;
-    }
+		const currentUser = this.authService.getCurrentUser();
+		if (!currentUser) {
+			this.router.navigate(['/login']);
+			return false;
+		}
 
-    if (!this.authService.isUserProfileComplete()) {
-      this.router.navigate(['/profile/edit']);
-      return false;
-    }
+		// Check if user is admin
+		if (currentUser.alias === 'admin') {
+			this.router.navigate(['/admin']);
+			return false;
+		}
 
-    return true;
-  }
+		if (!this.authService.isUserProfileComplete()) {
+			this.router.navigate(['/profile/edit']);
+			return false;
+		}
 
-  async canActivateProfileEdit(): Promise<boolean> {
-    const user = this.authService.getCurrentUser();
-    const storedAlias = this.authService.getStoredAlias();
-    
-    // If no stored alias, redirect to login
-    if (!storedAlias) {
-      this.router.navigate(['/login']);
-      return false;
-    }
+		return true;
+	}
 
-    // If user data is not loaded yet, try to refresh it
-    if (!user) {
-      try {
-        const refreshedUser = await this.authService.refreshUserData();
-        if (!refreshedUser) {
-          this.router.navigate(['/login']);
-          return false;
-        }
-      } catch {
-        this.router.navigate(['/login']);
-        return false;
-      }
-    }
+	async canActivateProfileEdit(): Promise<boolean> {
+		const user = this.authService.getCurrentUser();
+		const storedAlias = this.authService.getStoredAlias();
 
-    return true;
-  }
+		// If no stored alias, redirect to login
+		if (!storedAlias) {
+			this.router.navigate(['/login']);
+			return false;
+		}
 
-  async canActivateAdmin(): Promise<boolean> {
-    const user = this.authService.getCurrentUser();
-    const storedAlias = this.authService.getStoredAlias();
-    
-    // If no stored alias, redirect to login
-    if (!storedAlias) {
-      this.router.navigate(['/login']);
-      return false;
-    }
+		// If user data is not loaded yet, try to refresh it
+		if (!user) {
+			try {
+				const refreshedUser = await this.authService.refreshUserData();
+				if (!refreshedUser) {
+					this.router.navigate(['/login']);
+					return false;
+				}
+			} catch {
+				this.router.navigate(['/login']);
+				return false;
+			}
+		}
 
-    // If user data is not loaded yet, try to refresh it
-    if (!user) {
-      try {
-        const refreshedUser = await this.authService.refreshUserData();
-        if (!refreshedUser) {
-          this.router.navigate(['/login']);
-          return false;
-        }
-      } catch {
-        this.router.navigate(['/login']);
-        return false;
-      }
-    }
+		return true;
+	}
 
-    const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) {
-      this.router.navigate(['/login']);
-      return false;
-    }
+	async canActivateAdmin(): Promise<boolean> {
+		const user = this.authService.getCurrentUser();
+		const storedAlias = this.authService.getStoredAlias();
 
-    if (currentUser.alias !== 'admin') {
-      this.router.navigate(['/']);
-      return false;
-    }
+		// If no stored alias, redirect to login
+		if (!storedAlias) {
+			this.router.navigate(['/login']);
+			return false;
+		}
 
-    return true;
-  }
+		// If user data is not loaded yet, try to refresh it
+		if (!user) {
+			try {
+				const refreshedUser = await this.authService.refreshUserData();
+				if (!refreshedUser) {
+					this.router.navigate(['/login']);
+					return false;
+				}
+			} catch {
+				this.router.navigate(['/login']);
+				return false;
+			}
+		}
+
+		const currentUser = this.authService.getCurrentUser();
+		if (!currentUser) {
+			this.router.navigate(['/login']);
+			return false;
+		}
+
+		if (currentUser.alias !== 'admin') {
+			this.router.navigate(['/']);
+			return false;
+		}
+
+		return true;
+	}
 }

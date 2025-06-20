@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component.ts';
 import { AuthService } from '../../services/auth.service.ts';
-import { User, isUserComplete } from '../../types/user.types.ts';
+import { isUserComplete, User } from '../../types/user.types.ts';
 
 @Component({
 	selector: 'app-profile',
 	standalone: true,
 	imports: [CommonModule, RouterModule, HeaderComponent],
 	templateUrl: './profile.component.html',
-	styleUrls: ['./profile.component.css']
+	styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
 	user: User | null = null;

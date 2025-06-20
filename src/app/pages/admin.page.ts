@@ -5,14 +5,14 @@ import { AuthGuard } from '../services/auth.guard.ts';
 import { AdminDashboardComponent } from '../components/admin-dashboard/admin-dashboard.component.ts';
 
 export const routeMeta: RouteMeta = {
-  canActivate: [() => inject(AuthGuard).canActivateAdmin()],
+	canActivate: [() => inject(AuthGuard).canActivateAdmin()],
 };
 
 @Component({
-  selector: 'app-admin-page',
-  standalone: true,
-  imports: [CommonModule, AdminDashboardComponent],
-  template: `
+	selector: 'app-admin-page',
+	standalone: true,
+	imports: [CommonModule, AdminDashboardComponent],
+	template: `
     <admin-dashboard></admin-dashboard>
   `,
 })

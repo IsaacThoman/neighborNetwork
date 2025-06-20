@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service.ts';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
+	selector: 'app-login',
+	standalone: true,
+	imports: [CommonModule, FormsModule],
+	template: `
     <div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 flex items-center justify-center px-4">
       <div class="max-w-md w-full">
         <div class="bg-white rounded-2xl shadow-xl p-8">
@@ -77,47 +77,47 @@ import { AuthService } from '../services/auth.service.ts';
         </div>
       </div>
     </div>
-  `
+  `,
 })
 export default class LoginComponent {
-  alias = '';
-  isLoading = false;
-  errorMessage = '';
+	alias = '';
+	isLoading = false;
+	errorMessage = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router,
+	) {}
 
-  async onSubmit() {
-    if (!this.alias.trim()) {
-      return;
-    }
+	async onSubmit() {
+		if (!this.alias.trim()) {
+			return;
+		}
 
-    this.isLoading = true;
-    this.errorMessage = '';
+		this.isLoading = true;
+		this.errorMessage = '';
 
-    try {
-      const { user, isNewUser: _isNewUser } = await this.authService.login(this.alias.trim());
-      
-      // Check if user is admin
-      if (user.alias === 'admin') {
-        this.router.navigate(['/admin']);
-        return;
-      }
-      
-      if (!this.authService.isUserProfileComplete()) {
-        // Redirect to profile edit if user is incomplete
-        this.router.navigate(['/profile-edit']);
-      } else {
-        // Redirect to explore page if user is complete
-        this.router.navigate(['/explore']);
-      }
-    } catch (error) {
-      console.error('Login failed:', error);
-      this.errorMessage = 'Login failed. Please try again.';
-    } finally {
-      this.isLoading = false;
-    }
-  }
+		try {
+			const { user, isNewUser: _isNewUser } = await this.authService.login(this.alias.trim());
+
+			// Check if user is admin
+			if (user.alias === 'admin') {
+				this.router.navigate(['/admin']);
+				return;
+			}
+
+			if (!this.authService.isUserProfileComplete()) {
+				// Redirect to profile edit if user is incomplete
+				this.router.navigate(['/profile-edit']);
+			} else {
+				// Redirect to explore page if user is complete
+				this.router.navigate(['/explore']);
+			}
+		} catch (error) {
+			console.error('Login failed:', error);
+			this.errorMessage = 'Login failed. Please try again.';
+		} finally {
+			this.isLoading = false;
+		}
+	}
 }

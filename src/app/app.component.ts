@@ -15,6 +15,6 @@ import { RouterOutlet } from '@angular/router';
 			min-height: 100vh;
 			padding-bottom: 80px; /* Space for bottom navigation */
 		}
-	`]
+	`],
 })
 export class AppComponent {}

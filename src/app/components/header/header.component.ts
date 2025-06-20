@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service.ts';
@@ -21,7 +21,7 @@ export class HeaderComponent {
 
 	constructor(
 		private authService: AuthService,
-		private router: Router
+		private router: Router,
 	) {}
 
 	onToggleFilters() {

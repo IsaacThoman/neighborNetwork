@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service.ts';
-import { User, ROLES } from '../types/user.types.ts';
+import { ROLES, User } from '../types/user.types.ts';
 import { HeaderComponent } from '../components/header/header.component.ts';
 
 @Component({
-  selector: 'app-profile-edit',
-  standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent],
-  template: `
+	selector: 'app-profile-edit',
+	standalone: true,
+	imports: [CommonModule, FormsModule, HeaderComponent],
+	template: `
     <div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100">
       <!-- Header with alias display -->
       <div class="bg-white shadow-sm border-b border-red-200">
@@ -191,75 +191,75 @@ import { HeaderComponent } from '../components/header/header.component.ts';
         </form>
       </div>
     </div>
-  `
+  `,
 })
 export default class ProfileEditComponent implements OnInit {
-  currentUser: User | null = null;
-  formData: Partial<User> = {};
-  areasOfInterestString = '';
-  roles = ROLES;
-  hubLocations = ['Bloomington', 'Phoenix', 'Dallas', 'Atlanta'];
-  isLoading = false;
-  errorMessage = '';
+	currentUser: User | null = null;
+	formData: Partial<User> = {};
+	areasOfInterestString = '';
+	roles = ROLES;
+	hubLocations = ['Bloomington', 'Phoenix', 'Dallas', 'Atlanta'];
+	isLoading = false;
+	errorMessage = '';
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router,
+	) {}
 
-  ngOnInit() {
-    this.currentUser = this.authService.getCurrentUser();
-    if (!this.currentUser) {
-      this.router.navigate(['/login']);
-      return;
-    }
+	ngOnInit() {
+		this.currentUser = this.authService.getCurrentUser();
+		if (!this.currentUser) {
+			this.router.navigate(['/login']);
+			return;
+		}
 
-    // Initialize form data
-    this.formData = { ...this.currentUser };
-    this.areasOfInterestString = this.currentUser.areasOfInterest?.join(', ') || '';
-  }
+		// Initialize form data
+		this.formData = { ...this.currentUser };
+		this.areasOfInterestString = this.currentUser.areasOfInterest?.join(', ') || '';
+	}
 
-  goBack() {
-      if (this.authService.isUserProfileComplete()) {
-        this.router.navigate(['/profile']);
-      } else {
-        // If profile is incomplete, go back to login screen
-        this.router.navigate(['/login']);
-      }
-  }
+	goBack() {
+		if (this.authService.isUserProfileComplete()) {
+			this.router.navigate(['/profile']);
+		} else {
+			// If profile is incomplete, go back to login screen
+			this.router.navigate(['/login']);
+		}
+	}
 
-  async onSubmit() {
-    if (!this.currentUser) return;
+	async onSubmit() {
+		if (!this.currentUser) return;
 
-    this.isLoading = true;
-    this.errorMessage = '';
+		this.isLoading = true;
+		this.errorMessage = '';
 
-    try {
-      // Process areas of interest
-      const areasOfInterest = this.areasOfInterestString
-        .split(',')
-        .map(item => item.trim())
-        .filter(item => item.length > 0);
+		try {
+			// Process areas of interest
+			const areasOfInterest = this.areasOfInterestString
+				.split(',')
+				.map((item) => item.trim())
+				.filter((item) => item.length > 0);
 
-      const updates: Partial<User> = {
-        ...this.formData,
-        areasOfInterest: areasOfInterest.length > 0 ? areasOfInterest : undefined
-      };
+			const updates: Partial<User> = {
+				...this.formData,
+				areasOfInterest: areasOfInterest.length > 0 ? areasOfInterest : undefined,
+			};
 
-      await this.authService.updateUser(updates);
-      
-      // Redirect based on profile completeness
-      if (this.authService.isUserProfileComplete()) {
-        this.router.navigate(['/profile']);
-      } else {
-        // Stay on edit page if still incomplete
-        this.errorMessage = 'Please fill in all required fields to complete your profile.';
-      }
-    } catch (error) {
-      console.error('Failed to update profile:', error);
-      this.errorMessage = 'Failed to save profile. Please try again.';
-    } finally {
-      this.isLoading = false;
-    }
-  }
+			await this.authService.updateUser(updates);
+
+			// Redirect based on profile completeness
+			if (this.authService.isUserProfileComplete()) {
+				this.router.navigate(['/profile']);
+			} else {
+				// Stay on edit page if still incomplete
+				this.errorMessage = 'Please fill in all required fields to complete your profile.';
+			}
+		} catch (error) {
+			console.error('Failed to update profile:', error);
+			this.errorMessage = 'Failed to save profile. Please try again.';
+		} finally {
+			this.isLoading = false;
+		}
+	}
 }

@@ -24,7 +24,7 @@ interface Connection {
 	standalone: true,
 	imports: [CommonModule, FormsModule, HeaderComponent, FiltersComponent],
 	templateUrl: './connections.component.html',
-	styleUrls: ['./connections.component.css']
+	styleUrls: ['./connections.component.css'],
 })
 export class ConnectionsComponent implements OnInit {
 	searchTerm = '';
@@ -33,7 +33,7 @@ export class ConnectionsComponent implements OnInit {
 
 	constructor(
 		private authService: AuthService,
-		private router: Router
+		private router: Router,
 	) {}
 
 	ngOnInit() {
@@ -58,7 +58,7 @@ export class ConnectionsComponent implements OnInit {
 			mutualConnections: 12,
 			location: 'San Francisco',
 			yearsExperience: 5,
-			workStyle: 'remote'
+			workStyle: 'remote',
 		},
 		{
 			id: 2,
@@ -69,7 +69,7 @@ export class ConnectionsComponent implements OnInit {
 			mutualConnections: 8,
 			location: 'San Francisco',
 			yearsExperience: 3,
-			workStyle: 'hybrid'
+			workStyle: 'hybrid',
 		},
 		{
 			id: 3,
@@ -80,7 +80,7 @@ export class ConnectionsComponent implements OnInit {
 			mutualConnections: 15,
 			location: 'New York',
 			yearsExperience: 7,
-			workStyle: 'office'
+			workStyle: 'office',
 		},
 		{
 			id: 4,
@@ -91,8 +91,8 @@ export class ConnectionsComponent implements OnInit {
 			mutualConnections: 23,
 			location: 'San Francisco',
 			yearsExperience: 4,
-			workStyle: 'remote'
-		}
+			workStyle: 'remote',
+		},
 	];
 
 	get filteredConnections() {
@@ -100,7 +100,7 @@ export class ConnectionsComponent implements OnInit {
 
 		// Filter by search term
 		if (this.searchTerm) {
-			filtered = filtered.filter(connection =>
+			filtered = filtered.filter((connection) =>
 				connection.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
 				connection.role.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
 				connection.department.toLowerCase().includes(this.searchTerm.toLowerCase())
@@ -109,27 +109,27 @@ export class ConnectionsComponent implements OnInit {
 
 		// Apply filters
 		if (this.filters.department) {
-			filtered = filtered.filter(connection => 
+			filtered = filtered.filter((connection) =>
 				connection.department.toLowerCase() === this.filters.department.toLowerCase()
 			);
 		}
 
 		if (this.filters.location) {
-			filtered = filtered.filter(connection => 
+			filtered = filtered.filter((connection) =>
 				connection.location?.toLowerCase().includes(this.filters.location.toLowerCase())
 			);
 		}
 
 		if (this.filters.workStyle) {
-			filtered = filtered.filter(connection => 
+			filtered = filtered.filter((connection) =>
 				connection.workStyle?.toLowerCase() === this.filters.workStyle.toLowerCase()
 			);
 		}
 
 		if (this.filters.yearsRange) {
-			const [min, max] = this.filters.yearsRange.split('-').map(n => parseInt(n));
+			const [min, max] = this.filters.yearsRange.split('-').map((n) => parseInt(n));
 			if (!isNaN(min) && !isNaN(max)) {
-				filtered = filtered.filter(connection => {
+				filtered = filtered.filter((connection) => {
 					const years = connection.yearsExperience || 0;
 					return years >= min && years <= max;
 				});

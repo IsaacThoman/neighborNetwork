@@ -1,47 +1,47 @@
 .nav-tab {
-  color: #6b7280;
-  min-width: 60px;
-  transition: color 0.2s ease-in-out;
+	color: #6b7280;
+	min-width: 60px;
+	transition: color 0.2s ease-in-out;
 }
 
 .nav-tab:hover {
-  color: #dc2626;
+	color: #dc2626;
 }
 
 .nav-tab.active-tab {
-  color: #dc2626;
-  background-color: #fef2f2;
+	color: #dc2626;
+	background-color: #fef2f2;
 }
 
 .nav-tab svg {
-  transition: transform 0.2s ease-in-out;
+	transition: transform 0.2s ease-in-out;
 }
 
 .nav-tab:hover svg {
-  transform: scale(1.1);
+	transform: scale(1.1);
 }
 
 .nav-tab.active-tab svg {
-  transform: scale(1.05);
+	transform: scale(1.05);
 }
 
 /* Add padding to bottom of main content to account for fixed nav */
 :host {
-  display: block;
+	display: block;
 }
 
 /* Badge for notifications (can be added later) */
 .nav-tab .badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  background-color: #dc2626;
-  color: white;
-  font-size: 10px;
-  border-radius: 50%;
-  height: 20px;
-  width: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+	position: absolute;
+	top: -4px;
+	right: -4px;
+	background-color: #dc2626;
+	color: white;
+	font-size: 10px;
+	border-radius: 50%;
+	height: 20px;
+	width: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
