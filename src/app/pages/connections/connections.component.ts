@@ -51,10 +51,10 @@ export class ConnectionsComponent implements OnInit {
 	connections: Connection[] = [
 		{
 			id: 1,
-			name: 'Sarah Johnson',
+			name: 'Isaac Thoman',
 			role: 'UX Designer',
 			department: 'Design',
-			avatar: '/redguy.png',
+			avatar: '/isaac.png',
 			mutualConnections: 12,
 			location: 'San Francisco',
 			yearsExperience: 5,
@@ -62,10 +62,10 @@ export class ConnectionsComponent implements OnInit {
 		},
 		{
 			id: 2,
-			name: 'Mike Chen',
+			name: 'Philip Nsajja',
 			role: 'Product Manager',
 			department: 'Product',
-			avatar: '/yellowguy.webp',
+			avatar: '/philip.png',
 			mutualConnections: 8,
 			location: 'San Francisco',
 			yearsExperience: 3,
@@ -73,10 +73,10 @@ export class ConnectionsComponent implements OnInit {
 		},
 		{
 			id: 3,
-			name: 'Emily Rodriguez',
+			name: 'Colin Chua',
 			role: 'Data Scientist',
 			department: 'Analytics',
-			avatar: '/redguy.png',
+			avatar: '/colin.webp',
 			mutualConnections: 15,
 			location: 'New York',
 			yearsExperience: 7,
@@ -84,25 +84,14 @@ export class ConnectionsComponent implements OnInit {
 		},
 		{
 			id: 4,
-			name: 'David Kim',
+			name: 'Michael Carroll',
 			role: 'Frontend Developer',
 			department: 'Engineering',
-			avatar: '/yellowguy.webp',
+			avatar: '/mac.png',
 			mutualConnections: 23,
 			location: 'San Francisco',
 			yearsExperience: 4,
 			workStyle: 'remote'
-		},
-		{
-			id: 5,
-			name: 'Lisa Thompson',
-			role: 'Marketing Manager',
-			department: 'Marketing',
-			avatar: '/redguy.png',
-			mutualConnections: 6,
-			location: 'Austin',
-			yearsExperience: 6,
-			workStyle: 'hybrid'
 		}
 	];
 

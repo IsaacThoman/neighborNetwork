@@ -191,7 +191,7 @@ export class MainServer {
 					{
 						id: 3,
 						name: 'Michael Carroll ',
-						pronouns: 'they/he/she',
+						pronouns: 'he/him',
 						department: 'Marketing',
 						role: 'Digital Marketing Specialist',
 						yearsAtCompany: 2,

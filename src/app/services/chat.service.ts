@@ -51,7 +51,7 @@ export class ChatService {
         {
           id: 'm1',
           senderId: '1',
-          senderName: 'Sarah Johnson',
+          senderName: 'Isaac Thoman',
           content: 'Hey! Are you free for a quick call about the new design system?',
           timestamp: new Date(Date.now() - 120000), // 2 minutes ago
           isRead: false
@@ -59,7 +59,7 @@ export class ChatService {
         {
           id: 'm2',
           senderId: '1',
-          senderName: 'Sarah Johnson',
+          senderName: 'Isaac Thoman',
           content: 'I have some ideas that might help streamline our workflow',
           timestamp: new Date(Date.now() - 60000), // 1 minute ago
           isRead: false
@@ -77,7 +77,7 @@ export class ChatService {
         {
           id: 'm4',
           senderId: '2',
-          senderName: 'Mike Chen',
+          senderName: 'Philip Nsajja',
           content: 'Thanks for the feedback on the product roadmap!',
           timestamp: new Date(Date.now() - 3600000), // 1 hour ago
           isRead: true
@@ -95,7 +95,7 @@ export class ChatService {
         {
           id: 'm6',
           senderId: '3',
-          senderName: 'Emily Rodriguez',
+          senderName: 'Colin Chua',
           content: 'The data analysis looks great. Can we schedule a review?',
           timestamp: new Date(Date.now() - 10800000), // 3 hours ago
           isRead: false
@@ -105,7 +105,7 @@ export class ChatService {
         {
           id: 'm7',
           senderId: '4',
-          senderName: 'David Kim',
+          senderName: 'Michael Carroll',
           content: 'I pushed the latest changes to the feature branch.',
           timestamp: new Date(Date.now() - 86400000), // Yesterday
           isRead: true
@@ -116,24 +116,6 @@ export class ChatService {
           senderName: 'You',
           content: 'Perfect! I\'ll review the code this afternoon.',
           timestamp: new Date(Date.now() - 82800000), // Yesterday + 1 hour
-          isRead: true
-        }
-      ],
-      '5': [
-        {
-          id: 'm9',
-          senderId: '5',
-          senderName: 'Lisa Thompson',
-          content: 'Great work on the campaign launch! 🎉',
-          timestamp: new Date(Date.now() - 172800000), // 2 days ago
-          isRead: true
-        },
-        {
-          id: 'm10',
-          senderId: 'current',
-          senderName: 'You',
-          content: 'Thank you! The team really pulled together on this one.',
-          timestamp: new Date(Date.now() - 172800000 + 1800000), // 2 days ago + 30 min
           isRead: true
         }
       ]
@@ -150,8 +132,8 @@ export class ChatService {
     const baseChats = [
       {
         id: 1,
-        name: 'Sarah Johnson',
-        avatar: '/redguy.png',
+        name: 'Isaac Thoman',
+        avatar: '/isaac.png',
         department: 'Design',
         location: 'San Francisco',
         workStyle: 'remote',
@@ -159,8 +141,8 @@ export class ChatService {
       },
       {
         id: 2,
-        name: 'Mike Chen',
-        avatar: '/yellowguy.webp',
+        name: 'Philip Nsajja',
+        avatar: '/philip.png',
         department: 'Product',
         location: 'San Francisco',
         workStyle: 'hybrid',
@@ -168,8 +150,8 @@ export class ChatService {
       },
       {
         id: 3,
-        name: 'Emily Rodriguez',
-        avatar: '/redguy.png',
+        name: 'Colin Chua',
+        avatar: '/colin.webp',
         department: 'Analytics',
         location: 'New York',
         workStyle: 'office',
@@ -178,21 +160,12 @@ export class ChatService {
       },
       {
         id: 4,
-        name: 'David Kim',
-        avatar: '/yellowguy.webp',
+        name: 'Michael Carroll',
+        avatar: '/mac.png',
         department: 'Engineering',
         location: 'San Francisco',
         workStyle: 'remote',
         yearsExperience: 4
-      },
-      {
-        id: 5,
-        name: 'Lisa Thompson',
-        avatar: '/redguy.png',
-        department: 'Marketing',
-        location: 'Austin',
-        workStyle: 'hybrid',
-        yearsExperience: 6
       }
     ];
 
