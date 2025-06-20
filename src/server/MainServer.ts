@@ -2,7 +2,6 @@
 
 import { Application, Router, send } from '@oak/oak';
 import { Server } from 'https://deno.land/x/socket_io@0.2.0/mod.ts';
-import { serve } from 'https://deno.land/std@0.150.0/http/server.ts';
 
 import { CustomServer } from '../shared/messages.ts';
 import config from './config.ts';
@@ -75,8 +74,25 @@ export class MainServer {
 					context.response.type = 'application/json';
 					context.response.body = JSON.stringify(result.value);
 				} else {
-					context.response.status = 404;
-					context.response.body = JSON.stringify({ error: 'User not found' });
+					this.router.post('/api/users', async (context) => {
+					try {
+						const body = await context.request.body.json();
+						const user: User = {
+							...body,
+							createdAt: new Date(),
+							updatedAt: new Date()
+						};
+
+						await this.kv.set(['users', user.alias], user);
+						
+						context.response.type = 'application/json';
+						context.response.body = JSON.stringify(user);
+					} catch (err) {
+						console.error('Error creating user:', err);
+						context.response.status = 500;
+						context.response.body = JSON.stringify({ error: 'Internal server error' });
+					}
+					})
 				}
 			} catch (err) {
 				console.error('Error getting user:', err);
@@ -245,9 +261,13 @@ export class MainServer {
 		this.app.use(this.router.allowedMethods());
 	}
 
-	private async start() {
+	private start() {
 		try {
-			const handler = this.io.handler(async (req: Request) => {
+			
+			Deno.serve({
+				port: config.server.port,
+				hostname: config.server.hostname,
+			}, async (req: Request) => {
 				try {
 					return await this.app.handle(req) || new Response(null, { status: 404 });
 				} catch (error) {
@@ -255,11 +275,7 @@ export class MainServer {
 					return new Response('Internal Server Error', { status: 500 });
 				}
 			});
-
-			await serve(handler, {
-				port: config.server.port,
-				hostname: config.server.hostname,
-			});
+			
 		} catch (error) {
 			console.error('Failed to start server:', error);
 			Deno.exit(1);

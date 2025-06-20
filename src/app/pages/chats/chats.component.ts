@@ -1,25 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { HeaderComponent } from '../../components/header/header.component.ts';
 import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
 import { AuthService } from '../../services/auth.service.ts';
+import { ChatService, Chat } from '../../services/chat.service.ts';
 import { User } from '../../types/user.types.ts';
-
-interface Chat {
-	id: number;
-	name: string;
-	avatar: string;
-	lastMessage: string;
-	timestamp: string;
-	unreadCount: number;
-	isTyping?: boolean;
-	// Filter-related properties
-	department?: string;
-	location?: string;
-	workStyle?: string;
-	yearsExperience?: number;
-}
 
 @Component({
 	selector: 'app-chats',
@@ -28,17 +16,29 @@ interface Chat {
 	templateUrl: './chats.component.html',
 	styleUrls: ['./chats.component.css']
 })
-export class ChatsComponent implements OnInit {
+export class ChatsComponent implements OnInit, OnDestroy {
 	searchTerm = '';
 	showFilters = false;
 	currentUser: User | null = null;
+	chats: Chat[] = [];
+	private chatsSubscription?: Subscription;
 
-	constructor(private authService: AuthService) {}
+	constructor(
+		private authService: AuthService,
+		private chatService: ChatService,
+		private router: Router
+	) {}
 
 	ngOnInit() {
 		this.currentUser = this.authService.getCurrentUser();
+		this.chatsSubscription = this.chatService.getChats().subscribe(chats => {
+			this.chats = chats;
+		});
 	}
 
+	ngOnDestroy() {
+		this.chatsSubscription?.unsubscribe();
+	}
 	// Filter properties
 	filters: FilterCriteria = {
 		department: '',
@@ -46,71 +46,6 @@ export class ChatsComponent implements OnInit {
 		location: '',
 		workStyle: '',
 	};
-
-	chats: Chat[] = [
-		{
-			id: 1,
-			name: 'Sarah Johnson',
-			avatar: '/redguy.png',
-			lastMessage: 'Hey! Are you free for a quick call about the new design system?',
-			timestamp: '2m ago',
-			unreadCount: 2,
-			isTyping: false,
-			department: 'Design',
-			location: 'San Francisco',
-			workStyle: 'remote',
-			yearsExperience: 5
-		},
-		{
-			id: 2,
-			name: 'Mike Chen',
-			avatar: '/yellowguy.webp',
-			lastMessage: 'Thanks for the feedback on the product roadmap!',
-			timestamp: '1h ago',
-			unreadCount: 0,
-			department: 'Product',
-			location: 'San Francisco',
-			workStyle: 'hybrid',
-			yearsExperience: 3
-		},
-		{
-			id: 3,
-			name: 'Emily Rodriguez',
-			avatar: '/redguy.png',
-			lastMessage: 'The data analysis looks great. Can we schedule a review?',
-			timestamp: '3h ago',
-			unreadCount: 1,
-			isTyping: true,
-			department: 'Analytics',
-			location: 'New York',
-			workStyle: 'office',
-			yearsExperience: 7
-		},
-		{
-			id: 4,
-			name: 'David Kim',
-			avatar: '/yellowguy.webp',
-			lastMessage: 'I pushed the latest changes to the feature branch.',
-			timestamp: 'Yesterday',
-			unreadCount: 0,
-			department: 'Engineering',
-			location: 'San Francisco',
-			workStyle: 'remote',
-			yearsExperience: 4
-		},
-		{
-			id: 5,
-			name: 'Lisa Thompson',
-			avatar: '/redguy.png',
-			lastMessage: 'Great work on the campaign launch! 🎉',
-			timestamp: '2 days ago',
-			unreadCount: 0,
-			department: 'Marketing',
-			location: 'Austin',
-			workStyle: 'hybrid',
-			yearsExperience: 6
-		}
-	];
 
 	get filteredChats() {
 		let filtered = this.chats;
@@ -171,12 +106,14 @@ export class ChatsComponent implements OnInit {
 			workStyle: '',
 		};
 	}
-
 	openChat(chat: Chat) {
 		console.log('Opening chat with:', chat.name);
-		// Navigate to individual chat or open chat modal
-		// For now, just mark as read
-		chat.unreadCount = 0;
+		// Mark messages as read in the chat service
+		if (this.currentUser?.alias) {
+			this.chatService.markMessagesAsRead(chat.id.toString(), this.currentUser.alias);
+		}
+		// Navigate to individual chat screen
+		this.router.navigate(['/chat', chat.id]);
 	}
 
 	getTotalUnreadCount(): number {

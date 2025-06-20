@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component.ts';
 import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
 import { AuthService } from '../../services/auth.service.ts';
@@ -30,7 +31,10 @@ export class ConnectionsComponent implements OnInit {
 	showFilters = false;
 	currentUser: User | null = null;
 
-	constructor(private authService: AuthService) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router
+	) {}
 
 	ngOnInit() {
 		this.currentUser = this.authService.getCurrentUser();
@@ -165,6 +169,7 @@ export class ConnectionsComponent implements OnInit {
 
 	messageConnection(connection: Connection) {
 		console.log('Starting chat with:', connection.name);
-		// Navigate to chat or open chat modal
+		// Navigate to individual chat screen using the connection's ID
+		this.router.navigate(['/chat', connection.id]);
 	}
 }
