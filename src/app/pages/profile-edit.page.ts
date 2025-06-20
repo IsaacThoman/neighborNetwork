@@ -46,7 +46,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
             
             <!-- Name Field -->
             <div class="mb-6">
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="name" class="block text-base font-medium text-gray-700 mb-2">
                 Full Name <span class="text-red-500">*</span>
               </label>
               <input
@@ -66,7 +66,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
 
             <!-- Role Field -->
             <div class="mb-6">
-              <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="role" class="block text-base font-medium text-gray-700 mb-2">
                 Role <span class="text-red-500">*</span>
               </label>
               <select
@@ -86,7 +86,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
 
             <!-- Bio Field -->
             <div class="mb-6">
-              <label for="bio" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="bio" class="block text-base font-medium text-gray-700 mb-2">
                 Bio <span class="text-red-500">*</span>
                 <span class="text-xs text-gray-500">(minimum 20 characters)</span>
               </label>
@@ -114,7 +114,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
 
             <!-- Hub Location Field -->
             <div class="mb-6">
-              <label for="hubLocation" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="hubLocation" class="block text-base font-medium text-gray-700 mb-2">
                 Hub Location
               </label>
               <input
@@ -130,7 +130,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
 
             <!-- Years at State Farm -->
             <div class="mb-6">
-              <label for="yearsAtStateFarm" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="yearsAtStateFarm" class="block text-base font-medium text-gray-700 mb-2">
                 Years at State Farm
               </label>
               <input
@@ -147,7 +147,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
 
             <!-- Areas of Interest -->
             <div class="mb-6">
-              <label for="areasOfInterest" class="block text-sm font-medium text-gray-700 mb-2">
+              <label for="areasOfInterest" class="block text-base font-medium text-gray-700 mb-2">
                 Areas of Interest
                 <span class="text-xs text-gray-500">(separate with commas)</span>
               </label>
