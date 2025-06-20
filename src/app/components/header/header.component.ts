@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service.ts';
 
 @Component({
 	selector: 'app-header',
@@ -17,7 +19,17 @@ export class HeaderComponent {
 	@Input()
 	userAlias?: string;
 
+	constructor(
+		private authService: AuthService,
+		private router: Router
+	) {}
+
 	onToggleFilters() {
 		this.toggleFilters.emit();
+	}
+
+	onLogout() {
+		this.authService.logout();
+		this.router.navigate(['/login']);
 	}
 }
