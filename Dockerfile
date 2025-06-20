@@ -56,4 +56,4 @@ ENTRYPOINT ["/tini", "--", "/bin/deno"]
 
 # Set the default command to run your main application file
 # Includes the necessary permissions based on your 'start' task in deno.json
-CMD ["run", "--allow-read", "--allow-env", "--allow-net", "--allow-write", "main.ts"]
+CMD ["run", "--allow-read", "--unstable-kv", "--allow-env", "--allow-net", "--allow-write", "main.ts"]
