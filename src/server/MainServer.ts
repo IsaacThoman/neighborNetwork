@@ -56,8 +56,25 @@ export class MainServer {
 					context.response.type = 'application/json';
 					context.response.body = JSON.stringify(result.value);
 				} else {
-					context.response.status = 404;
-					context.response.body = JSON.stringify({ error: 'User not found' });
+					this.router.post('/api/users', async (context) => {
+					try {
+						const body = await context.request.body.json();
+						const user: User = {
+							...body,
+							createdAt: new Date(),
+							updatedAt: new Date()
+						};
+
+						await this.kv.set(['users', user.alias], user);
+						
+						context.response.type = 'application/json';
+						context.response.body = JSON.stringify(user);
+					} catch (err) {
+						console.error('Error creating user:', err);
+						context.response.status = 500;
+						context.response.body = JSON.stringify({ error: 'Internal server error' });
+					}
+					})
 				}
 			} catch (err) {
 				console.error('Error getting user:', err);

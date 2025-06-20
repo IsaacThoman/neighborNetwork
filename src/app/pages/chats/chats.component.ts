@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component.ts';
 import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
 import { AuthService } from '../../services/auth.service.ts';
@@ -33,7 +34,10 @@ export class ChatsComponent implements OnInit {
 	showFilters = false;
 	currentUser: User | null = null;
 
-	constructor(private authService: AuthService) {}
+	constructor(
+		private authService: AuthService,
+		private router: Router
+	) {}
 
 	ngOnInit() {
 		this.currentUser = this.authService.getCurrentUser();
@@ -174,9 +178,10 @@ export class ChatsComponent implements OnInit {
 
 	openChat(chat: Chat) {
 		console.log('Opening chat with:', chat.name);
-		// Navigate to individual chat or open chat modal
-		// For now, just mark as read
+		// Mark as read
 		chat.unreadCount = 0;
+		// Navigate to individual chat screen
+		this.router.navigate(['/chat', chat.id]);
 	}
 
 	getTotalUnreadCount(): number {
