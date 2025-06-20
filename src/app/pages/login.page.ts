@@ -98,7 +98,13 @@ export default class LoginComponent {
     this.errorMessage = '';
 
     try {
-      const { user: _user, isNewUser: _isNewUser } = await this.authService.login(this.alias.trim());
+      const { user, isNewUser: _isNewUser } = await this.authService.login(this.alias.trim());
+      
+      // Check if user is admin
+      if (user.alias === 'admin') {
+        this.router.navigate(['/admin']);
+        return;
+      }
       
       if (!this.authService.isUserProfileComplete()) {
         // Redirect to profile edit if user is incomplete

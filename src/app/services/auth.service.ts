@@ -17,7 +17,7 @@ export class AuthService {
     this.checkExistingSession();
   }
 
-  private checkExistingSession() {
+  private checkExistingSession() {  
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       const user = JSON.parse(storedUser);
@@ -118,5 +118,43 @@ export class AuthService {
       console.error('Update user error:', error);
       throw error;
     }
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    try {
+      console.log('AuthService: Making request to /api/users');
+      const response = await fetch('/api/users');
+      console.log('AuthService: Response status:', response.status);
+      
+      if (response.ok) {
+        const users = await response.json();
+        console.log('AuthService: Received users:', users);
+        return users;
+      } else {
+        const errorText = await response.text();
+        console.error('AuthService: Error response:', errorText);
+        throw new Error(`Failed to get users: ${response.status} ${errorText}`);
+      }
+    } catch (error) {
+      console.error('Get all users error:', error);
+      throw error;
+    }
+  }
+
+  async deleteUser(alias: string): Promise<boolean> {
+    try {
+      const response = await fetch(`/api/users/${alias}`, {
+        method: 'DELETE'
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Delete user error:', error);
+      throw error;
+    }
+  }
+
+  isAdmin(): boolean {
+    const user = this.getCurrentUser();
+    return user?.alias === 'admin';
   }
 }

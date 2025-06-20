@@ -46,6 +46,25 @@ export class MainServer {
 			}
 		});
 
+		// Get all users endpoint (admin only) - must come before /api/users/:alias
+		this.router.get('/api/users', async (context) => {
+			try {
+				const users: User[] = [];
+				const iter = this.kv.list<User>({ prefix: ['users'] });
+				
+				for await (const { value } of iter) {
+					users.push(value);
+				}
+				
+				context.response.type = 'application/json';
+				context.response.body = JSON.stringify(users);
+			} catch (err) {
+				console.error('Error getting all users:', err);
+				context.response.status = 500;
+				context.response.body = JSON.stringify({ error: 'Internal server error' });
+			}
+		});
+
 		// User management endpoints
 		this.router.get('/api/users/:alias', async (context) => {
 			try {
