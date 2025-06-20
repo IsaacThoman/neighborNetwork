@@ -223,8 +223,8 @@ export default class ProfileEditComponent implements OnInit {
       if (this.authService.isUserProfileComplete()) {
         this.router.navigate(['/profile']);
       } else {
-        // If profile is incomplete, don't let them go back
-        this.router.navigate(['/explore']);
+        // If profile is incomplete, go back to login screen
+        this.router.navigate(['/login']);
       }
   }
 
