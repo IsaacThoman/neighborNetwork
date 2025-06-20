@@ -35,7 +35,7 @@ import { AuthService } from '../services/auth.service.ts';
                 required
                 minlength="2"
                 maxlength="50"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 placeholder="Enter your alias"
                 [disabled]="isLoading"
               >
