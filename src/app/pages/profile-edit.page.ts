@@ -87,8 +87,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
             <!-- Bio Field -->
             <div class="mb-6">
               <label for="bio" class="block text-base font-medium text-gray-700 mb-2">
-                Bio <span class="text-red-500">*</span>
-                <span class="text-xs text-gray-500">(minimum 20 characters)</span>
+                Bio <span class="text-xs text-gray-500">(minimum 20 characters)</span> <span class="text-red-500">*</span>
               </label>
               <textarea
                 id="bio"
@@ -107,7 +106,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
                   <div *ngIf="profileForm.controls['bio']?.errors?.['minlength']">Bio must be at least 20 characters</div>
                 </div>
                 <div class="text-xs text-gray-500">
-                  {{ (formData.bio || '').length }}/500
+                  {{ (formData.bio || '').length }}/500<span *ngIf="(formData.bio || '').length < 20" class="text-red-500"> • {{ 20 - (formData.bio || '').length }} characters left</span>
                 </div>
               </div>
             </div>
