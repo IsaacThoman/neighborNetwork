@@ -56,7 +56,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
                 [(ngModel)]="formData.name"
                 required
                 maxlength="100"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 placeholder="Enter your full name"
               >
               <div *ngIf="profileForm.submitted && profileForm.controls['name']?.invalid" class="mt-1 text-sm text-red-600">
@@ -74,7 +74,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
                 name="role"
                 [(ngModel)]="formData.role"
                 required
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               >
                 <option value="">Select a role</option>
                 <option *ngFor="let role of roles" [value]="role">{{ role }}</option>
@@ -97,7 +97,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
                 minlength="20"
                 maxlength="500"
                 rows="4"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 placeholder="Tell us about yourself, your interests, and what you're looking to connect about..."
               ></textarea>
               <div class="flex justify-between mt-1">
@@ -116,15 +116,15 @@ import { HeaderComponent } from '../components/header/header.component.ts';
               <label for="hubLocation" class="block text-base font-medium text-gray-700 mb-2">
                 Hub Location
               </label>
-              <input
-                type="text"
+              <select
                 id="hubLocation"
                 name="hubLocation"
                 [(ngModel)]="formData.hubLocation"
-                maxlength="100"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
-                placeholder="e.g., Bloomington, IL"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               >
+                <option value="">Select a hub location</option>
+                <option *ngFor="let location of hubLocations" [value]="location">{{ location }}</option>
+              </select>
             </div>
 
             <!-- Years at State Farm -->
@@ -139,7 +139,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
                 [(ngModel)]="formData.yearsAtStateFarm"
                 min="0"
                 max="50"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 placeholder="e.g., 3"
               >
             </div>
@@ -156,7 +156,7 @@ import { HeaderComponent } from '../components/header/header.component.ts';
                 name="areasOfInterest"
                 [(ngModel)]="areasOfInterestString"
                 maxlength="300"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors"
+                class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                 placeholder="e.g., Cloud Architecture, Mentorship, Innovation Labs"
               >
               <div class="mt-1 text-xs text-gray-500">
@@ -198,6 +198,7 @@ export default class ProfileEditComponent implements OnInit {
   formData: Partial<User> = {};
   areasOfInterestString = '';
   roles = ROLES;
+  hubLocations = ['Bloomington', 'Phoenix', 'Dallas', 'Atlanta'];
   isLoading = false;
   errorMessage = '';
 
