@@ -1,101 +1,110 @@
-<div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 pb-20">
-  <div class="max-w-md mx-auto px-4 py-6">
-    <!-- Header -->
+<div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100">
+  <!-- Header -->
+  <app-header [showFilters]="false" [userAlias]="user?.alias"></app-header>
+
+  <div class="max-w-md mx-auto px-4 py-6 pb-20">
+    <!-- Page Header -->
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold text-gray-800">My Profile</h1>
       <a 
-        routerLink="/profile/edit" 
+        routerLink="/profile-edit" 
         class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 text-sm font-medium"
       >
         Edit Profile
       </a>
     </div>
 
-    <!-- Profile Card -->
-    <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
-      <!-- Profile Header -->
-      <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 text-white">
-        <div class="flex items-center space-x-4">
-          <img 
-            [src]="user.avatar" 
-            [alt]="user.name"
-            class="w-20 h-20 rounded-full border-4 border-white shadow-lg"
-          >
-          <div>
-            <h2 class="text-xl font-bold">{{ user.name }}</h2>
-            <p class="text-red-100 text-sm">{{ user.role }}</p>
-            <p class="text-red-100 text-xs">{{ user.department }}</p>
+    <div *ngIf="user" class="space-y-6">
+      <!-- Profile Card -->
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <!-- Profile Header -->
+        <div class="bg-gradient-to-r from-red-500 to-red-600 p-6 text-white">
+          <div class="flex items-center space-x-4">
+            <div class="w-20 h-20 rounded-full border-4 border-white shadow-lg bg-white flex items-center justify-center">
+              <span class="text-2xl font-bold text-red-600">{{ (user.name || user.alias || '?').charAt(0).toUpperCase() }}</span>
+            </div>
+            <div>
+              <h2 class="text-xl font-bold">{{ user.name || user.alias }}</h2>
+              <p *ngIf="user.role" class="text-red-100 text-sm">{{ user.role }}</p>
+              <p *ngIf="user.hubLocation" class="text-red-100 text-xs">{{ user.hubLocation }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="p-6">
+          <!-- Years at State Farm -->
+          <div *ngIf="user.yearsAtStateFarm" class="flex justify-center mb-6">
+            <div class="text-center">
+              <div class="text-2xl font-bold text-gray-800">{{ user.yearsAtStateFarm }}</div>
+              <div class="text-sm text-gray-600">Years at State Farm</div>
+            </div>
+          </div>
+
+          <!-- Bio -->
+          <div *ngIf="user.bio" class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">About</h3>
+            <p class="text-gray-600 leading-relaxed">{{ user.bio }}</p>
+          </div>
+
+          <!-- Areas of Interest -->
+          <div *ngIf="user.areasOfInterest && user.areasOfInterest.length > 0" class="mb-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Areas of Interest</h3>
+            <div class="flex flex-wrap gap-2">
+              <span 
+                *ngFor="let interest of user.areasOfInterest" 
+                class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium"
+              >
+                {{ interest }}
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Profile Content -->
-      <div class="p-6">
-        <!-- Stats -->
-        <div class="flex justify-center mb-6">
-          <div class="text-center">
-            <div class="text-2xl font-bold text-gray-800">{{ user.connections }}</div>
-            <div class="text-sm text-gray-600">Connections</div>
+      <!-- Incomplete Profile Warning -->
+      <div *ngIf="!isProfileComplete()" class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div class="flex items-center">
+          <div class="text-yellow-600 mr-3">⚠️</div>
+          <div>
+            <h4 class="text-sm font-medium text-yellow-800">Complete Your Profile</h4>
+            <p class="text-sm text-yellow-700 mt-1">
+              Please fill in all required fields to get the most out of Connect.
+            </p>
           </div>
         </div>
+      </div>
 
-        <!-- Bio -->
-        <div class="mb-6">
-          <h3 class="text-lg font-semibold text-gray-800 mb-2">About</h3>
-          <p class="text-gray-600 leading-relaxed">{{ user.bio }}</p>
-        </div>
-
-        <!-- Contact Info -->
-        <div class="mb-6">
-          <h3 class="text-lg font-semibold text-gray-800 mb-2">Contact</h3>
-          <div class="flex items-center space-x-2 text-gray-600">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+      <!-- Quick Actions -->
+      <div class="grid grid-cols-2 gap-4">
+        <a 
+          routerLink="/connections"
+          class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200 text-center"
+        >
+          <div class="text-red-600 mb-2">
+            <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
-            <span>{{ user.email }}</span>
           </div>
-        </div>
+          <span class="text-sm font-medium text-gray-700">View Connections</span>
+        </a>
 
-        <!-- Interests -->
-        <div>
-          <h3 class="text-lg font-semibold text-gray-800 mb-3">Interests</h3>
-          <div class="flex flex-wrap gap-2">
-            <span 
-              *ngFor="let interest of user.interests"
-              class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm"
-            >
-              {{ interest }}
-            </span>
+        <a 
+          routerLink="/chats"
+          class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200 text-center"
+        >
+          <div class="text-red-600 mb-2">
+            <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
           </div>
-        </div>
+          <span class="text-sm font-medium text-gray-700">Messages</span>
+        </a>
       </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="grid grid-cols-2 gap-4">
-      <a 
-        routerLink="/connections"
-        class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200 text-center"
-      >
-        <div class="text-red-600 mb-2">
-          <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-          </svg>
-        </div>
-        <span class="text-sm font-medium text-gray-700">View Connections</span>
-      </a>
-
-      <a 
-        routerLink="/chats"
-        class="bg-white rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-200 text-center"
-      >
-        <div class="text-red-600 mb-2">
-          <svg class="w-8 h-8 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-          </svg>
-        </div>
-        <span class="text-sm font-medium text-gray-700">Messages</span>
-      </a>
+    <div *ngIf="!user" class="text-center py-8">
+      <p class="text-gray-500">No profile data available</p>
     </div>
   </div>
 </div>

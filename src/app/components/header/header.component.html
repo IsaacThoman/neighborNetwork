@@ -6,9 +6,11 @@
 					<span class="text-white font-bold text-sm">SF</span>
 				</div>
 				<h1 class="text-xl font-bold text-gray-900">Connect</h1>
+				<span *ngIf="userAlias" class="text-sm text-gray-500">• {{ userAlias }}</span>
 			</div>
 			<div class="flex items-center space-x-4">
 				<button
+					*ngIf="showFilters"
 					(click)="onToggleFilters()"
 					class="flex items-center space-x-2 px-3 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors"
 				>

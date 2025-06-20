@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component.ts';
 import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
+import { AuthService } from '../../services/auth.service.ts';
+import { User } from '../../types/user.types.ts';
 
 interface Chat {
 	id: number;
@@ -26,9 +28,16 @@ interface Chat {
 	templateUrl: './chats.component.html',
 	styleUrls: ['./chats.component.css']
 })
-export class ChatsComponent {
+export class ChatsComponent implements OnInit {
 	searchTerm = '';
 	showFilters = false;
+	currentUser: User | null = null;
+
+	constructor(private authService: AuthService) {}
+
+	ngOnInit() {
+		this.currentUser = this.authService.getCurrentUser();
+	}
 
 	// Filter properties
 	filters: FilterCriteria = {

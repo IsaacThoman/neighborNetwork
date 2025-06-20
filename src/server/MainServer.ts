@@ -1,3 +1,5 @@
+/// <reference lib="deno.unstable" />
+
 import { Application, Router, send } from '@oak/oak';
 import { Server } from 'https://deno.land/x/socket_io@0.2.0/mod.ts';
 import { serve } from 'https://deno.land/std@0.150.0/http/server.ts';
@@ -5,15 +7,33 @@ import { serve } from 'https://deno.land/std@0.150.0/http/server.ts';
 import { CustomServer } from '../shared/messages.ts';
 import config from './config.ts';
 
+interface User {
+	alias: string;
+	name?: string;
+	bio?: string;
+	role?: string;
+	hubLocation?: string;
+	yearsAtStateFarm?: number;
+	areasOfInterest?: string[];
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+
 export class MainServer {
 	router: Router = new Router();
 	app: Application = new Application();
 	io: CustomServer = new Server();
+	kv!: Deno.Kv;
 
 	constructor() {
-		this.setupRoutes();
+		this.initKv().then(() => {
+			this.setupRoutes();
+			this.start();
+		});
+	}
 
-		this.start();
+	private async initKv() {
+		this.kv = await Deno.openKv();
 	}
 
 	private setupRoutes() {
@@ -23,6 +43,80 @@ export class MainServer {
 				context.response.body = 'example api response :)';
 			} catch (err) {
 				console.error('Error getting server info via API:', err);
+			}
+		});
+
+		// User management endpoints
+		this.router.get('/api/users/:alias', async (context) => {
+			try {
+				const alias = context.params.alias;
+				const result = await this.kv.get<User>(['users', alias]);
+				
+				if (result.value) {
+					context.response.type = 'application/json';
+					context.response.body = JSON.stringify(result.value);
+				} else {
+					context.response.status = 404;
+					context.response.body = JSON.stringify({ error: 'User not found' });
+				}
+			} catch (err) {
+				console.error('Error getting user:', err);
+				context.response.status = 500;
+				context.response.body = JSON.stringify({ error: 'Internal server error' });
+			}
+		});
+
+		this.router.post('/api/users', async (context) => {
+			try {
+				const body = await context.request.body.json();
+				const user: User = {
+					...body,
+					createdAt: new Date(),
+					updatedAt: new Date()
+				};
+
+				await this.kv.set(['users', user.alias], user);
+				
+				context.response.type = 'application/json';
+				context.response.body = JSON.stringify(user);
+			} catch (err) {
+				console.error('Error creating user:', err);
+				context.response.status = 500;
+				context.response.body = JSON.stringify({ error: 'Internal server error' });
+			}
+		});
+
+		this.router.put('/api/users/:alias', async (context) => {
+			try {
+				const alias = context.params.alias;
+				const body = await context.request.body.json();
+				const user: User = {
+					...body,
+					alias, // Ensure alias matches URL
+					updatedAt: new Date()
+				};
+
+				await this.kv.set(['users', alias], user);
+				
+				context.response.type = 'application/json';
+				context.response.body = JSON.stringify(user);
+			} catch (err) {
+				console.error('Error updating user:', err);
+				context.response.status = 500;
+				context.response.body = JSON.stringify({ error: 'Internal server error' });
+			}
+		});
+
+		this.router.delete('/api/users/:alias', async (context) => {
+			try {
+				const alias = context.params.alias;
+				await this.kv.delete(['users', alias]);
+				
+				context.response.status = 204;
+			} catch (err) {
+				console.error('Error deleting user:', err);
+				context.response.status = 500;
+				context.response.body = JSON.stringify({ error: 'Internal server error' });
 			}
 		});
 

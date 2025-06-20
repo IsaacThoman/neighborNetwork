@@ -1,6 +1,9 @@
 <div class="min-h-screen bg-gradient-to-br from-red-50 to-red-100 pb-20">
   <!-- Header -->
-  <app-header (toggleFilters)="toggleFilters()"></app-header>
+  <app-header 
+    (toggleFilters)="toggleFilters()"
+    [userAlias]="currentUser?.alias">
+  </app-header>
 
   <!-- Filters Panel -->
   <app-filters 

@@ -2,11 +2,14 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { HeaderComponent } from '../../components/header/header.component.ts';
 import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
 import { Profile, ProfileCardComponent } from '../../components/profile-card/profile-card.component.ts';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component.ts';
 import { EmptyStateComponent } from '../../components/empty-state/empty-state.component.ts';
+import { AuthService } from '../../services/auth.service.ts';
+import { User } from '../../types/user.types.ts';
 
 @Component({
 	selector: 'app-explore',
@@ -32,6 +35,7 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
 	swipeDirection: 'left' | 'right' | null = null;
 	showInstructions = true;
 	showFilters = false;
+	currentUser: User | null = null;
 	private keydownListener?: (event: KeyboardEvent) => void;
 
 	// Filter properties
@@ -55,9 +59,23 @@ export class ExploreComponent implements OnInit, AfterViewInit, OnDestroy {
 	constructor(
 		private cdr: ChangeDetectorRef,
 		private http: HttpClient,
+		private router: Router,
+		private authService: AuthService,
 	) {}
 
 	ngOnInit() {
+		// Check authentication
+		this.currentUser = this.authService.getCurrentUser();
+		if (!this.currentUser) {
+			this.router.navigate(['/login']);
+			return;
+		}
+
+		if (!this.authService.isUserProfileComplete()) {
+			this.router.navigate(['/profile-edit']);
+			return;
+		}
+
 		this.loadProfiles();
 		this.setupKeyboardListeners();
 

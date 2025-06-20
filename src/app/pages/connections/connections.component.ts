@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../components/header/header.component.ts';
 import { FilterCriteria, FiltersComponent } from '../../components/filters/filters.component.ts';
+import { AuthService } from '../../services/auth.service.ts';
+import { User } from '../../types/user.types.ts';
 
 interface Connection {
 	id: number;
@@ -23,9 +25,16 @@ interface Connection {
 	templateUrl: './connections.component.html',
 	styleUrls: ['./connections.component.css']
 })
-export class ConnectionsComponent {
+export class ConnectionsComponent implements OnInit {
 	searchTerm = '';
 	showFilters = false;
+	currentUser: User | null = null;
+
+	constructor(private authService: AuthService) {}
+
+	ngOnInit() {
+		this.currentUser = this.authService.getCurrentUser();
+	}
 
 	// Filter properties
 	filters: FilterCriteria = {
