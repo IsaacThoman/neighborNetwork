@@ -88,6 +88,7 @@
 				[class.bg-white]="!isMyMessage(message)"
 				[class.text-gray-900]="!isMyMessage(message)"
 				[class.shadow-sm]="!isMyMessage(message)"
+				[class.ml-auto]="isMyMessage(message)"
 			>
 				<p class="text-sm leading-relaxed">{{ message.content }}</p>
 				
